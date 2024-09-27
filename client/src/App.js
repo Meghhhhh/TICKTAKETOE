@@ -9,7 +9,6 @@ import Background from "./components/Background";
 import FAQs from "./components/FAQs";
 import About from "./components/AboutUs";
 import NotFound from "./components/NotFound";
-import Footer from "./components/Footer";
 import Books from "./components/Books";
 import Mybooks from "./components/Mybooks";
 import Admin from "./components/Admin";
@@ -39,7 +38,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
          
-          <Footer />
+          
         </div>
       </Router>
     </>

@@ -22,14 +22,15 @@ const Librarian = () => {
   return (
     <div className={style.body}>
       <div className={style.parent}>
-        {librarians.map((librarian, index) => (
-          <div key={index} className={style.element}>
-            <h3>
-              {librarian.name} ({librarian.email}){" "}
-              <FaMinus className={style.icon} />
-            </h3>
-          </div>
-        ))}
+        {librarians &&
+          librarians.map((librarian, index) => (
+            <div key={index} className={style.element}>
+              <h3>
+                {librarian.name} ({librarian.email}){" "}
+                <FaMinus className={style.icon} />
+              </h3>
+            </div>
+          ))}
       </div>
     </div>
   );

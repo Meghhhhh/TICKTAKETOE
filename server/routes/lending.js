@@ -22,6 +22,14 @@ router.post("/lendBook", isLoggedIn, async (req, res) => {
 
     const user = await User.findOne({ email });
 
+    if(!user)
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "No user found",
+        data: null,
+      });
+
     if (book.quantity >= 0) {
       book.quantity = book.quantity - 1;
       user.borrowedBooks.push(bookId);
@@ -77,7 +85,7 @@ router.post(
       book.quantity = book.quantity + 1;
       user.borrowedBooks.pull(bookId);
 
-      const lend = Lend.findOne({ lendedBy: user._id, lendedBook: bookId });
+      const lend = await Lend.findOne({ lendedBy: user._id, lendedBook: bookId });
       if (!lend) {
         return res.status(404).json({
           success: false,

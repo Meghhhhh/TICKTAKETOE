@@ -15,6 +15,8 @@ const Mybooks = () => {
           withCredentials: true,
         });
         if (response.data.success) {
+          console.log(response.data.data);
+          
           setBookHistory(response.data.data);
         }
         console.log(response.data);
@@ -29,7 +31,7 @@ const Mybooks = () => {
   return (
     <div className={style.body}>
       <div className={style.listContainer}>
-        {bookHistory.map((item, index) => (
+        {bookHistory && bookHistory.map((item, index) => (
           <div key={index} className={style.element}>
             <div className={style.set}>
               <img src={item.thumbnail} className={style.imgs} alt="PDF Icon" />

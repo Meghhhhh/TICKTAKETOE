@@ -3,6 +3,7 @@ import style from "../module/home.module.css";
 import image from "../assets/logo-pink.png";
 import Genres from "./Genres";
 import Recommended from "./Recommended";
+import Footer from "./Footer";
 const Home = () => {
   return (
     <div>
@@ -20,6 +21,7 @@ const Home = () => {
       </div>
       <Genres />
       <Recommended />
+      <Footer />
     </div>
   );
 };

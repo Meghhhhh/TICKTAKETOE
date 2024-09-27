@@ -67,10 +67,15 @@ const Payment = () => {
 
   return (
     <>
-      <button className="btn btn-success" onClick={makePayment} type="button">
+      <button
+        className="btn btn-success"
+        style={{ padding: "100px" }}
+        onClick={makePayment}
+        type="button"
+      >
         Checkout
       </button>
-      <ToastContainer position="bottom-center"/>
+      <ToastContainer position="bottom-center" />
     </>
   );
 };

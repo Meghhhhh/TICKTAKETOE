@@ -31,6 +31,8 @@ const Libadmin = () => {
         withCredentials: true,
       })
       .then((res) => {
+        console.log("hello");
+        
         console.log(res);
         setLoading(false);
       })
@@ -38,7 +40,7 @@ const Libadmin = () => {
         console.error(error);
         setLoading(false);
       });
-    console.log(formData);
+    // console.log(formData);
   };
 
   return (
