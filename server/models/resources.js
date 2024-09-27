@@ -10,7 +10,7 @@ const Resources = mongoose.model(
       category: {
         type: String,
         required: true,
-        enum: ["text", "pdf", "word", "image", "video", "other", "link"],
+        enum: ["text", "pdf", "word", "image", "video", "other", "link"] ,
       },
       thumbnail: { type: String },
       thumbnailName: { type: String },
