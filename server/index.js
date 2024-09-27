@@ -13,6 +13,7 @@ const localAuth = require("./routes/localAuth.js");
 const googleAuth = require("./routes/googleAuth.js");
 const users = require("./routes/users.js");
 const lending = require("./routes/lending.js");
+const resource = require("./routes/resources.js");
 const app = express();
 const port = process.env.PORT || 3000;
 const payment = require("./routes/payment.js");
@@ -41,6 +42,7 @@ app.use("/users/api/v1", users);
 app.use("/payment/api/v1", payment);
 app.use("/books/api/v1", books);
 app.use("/lending/api/v1", lending);
+app.use("/resource/api/v1", resource);
 app.use(error);
 
 cron.schedule('0 0 * * *', async () => { 
