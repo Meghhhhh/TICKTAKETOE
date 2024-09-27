@@ -5,9 +5,23 @@
   align-items: center;
   height: 100%;
   justify-content: center;
+  flex-direction: column;
   display: flex;
   /* position: relative; */
   margin-top: 5rem;
+}
+.wrap{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 1rem;
 }
 .contactForm {
   display: flex;

@@ -12,8 +12,10 @@ import NotFound from "./components/NotFound";
 import Books from "./components/Books";
 import Mybooks from "./components/Mybooks";
 import Admin from "./components/Admin";
+import PaymentFailed from "./components/PaymentFailed";
 import Librarian from "./components/Librarian";
 import Libadmin from "./components/Libadmin";
+import PaymentSuccess from "./components/PaymentSuccess";
 
 function App() {
   return (
@@ -21,24 +23,23 @@ function App() {
       <Background />
       <Router>
         <div>
-        <TopBar />
+          <TopBar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Signup />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/paymentfailed" element={<PaymentFailed />} />
+            <Route path="/paymentSuccess" element={<PaymentSuccess />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/aboutus" element={<About />} />
             <Route path="/books" element={<Books />} />
             <Route path="/history" element={<Mybooks />} />
-            
             <Route path="/libadmin" element={<Libadmin />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/*" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-         
-          
         </div>
       </Router>
     </>
