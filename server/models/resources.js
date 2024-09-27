@@ -12,8 +12,6 @@ const Resources = mongoose.model(
         required: true,
         enum: ["text", "pdf", "word", "image", "video", "other", "link"] ,
       },
-      thumbnail: { type: String },
-      thumbnailName: { type: String },
       userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       description: { type: String },
        createdAt: {
