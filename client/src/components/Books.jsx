@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import style from "../module/books.module.css";
-import { IoSearch } from "react-icons/io5";
+import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import DropdownMenu from "./DropdownMenu";
 import axios from "axios";
 
@@ -10,13 +10,13 @@ const Books = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [filterType, setFilterType] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
 
   useEffect(() => {
     // Fetch books from the backend
     const fetchBooks = async () => {
       try {
         const response = await axios.get("/books/api/v1/getAllBooks");
-        console.log(response);
         if (response.data.success) {
           setBooks(response.data.data);
           setFilteredItems(response.data.data);
@@ -26,7 +26,20 @@ const Books = () => {
       }
     };
 
+    // Fetch bookmarked books
+    const fetchBookmarkedBooks = async () => {
+      try {
+        const response = await axios.get("/users/api/v1/getBookmarkedBooks");
+        if (response.data.success) {
+          setBookmarkedBooks(response.data.data.map((book) => book._id));
+        }
+      } catch (error) {
+        console.error("Error fetching bookmarked books:", error);
+      }
+    };
+
     fetchBooks();
+    fetchBookmarkedBooks();
   }, []);
 
   const handleSearchChange = (e) => {
@@ -75,6 +88,32 @@ const Books = () => {
     }
   };
 
+  const toggleBookmark = async (bookId) => {
+    try {
+      // If the book is already bookmarked, unbookmark it
+      if (bookmarkedBooks.includes(bookId)) {
+        const response = await axios.post("/users/api/v1/unbookmarkBook", {
+          bookId,
+        });
+        if (response.data.success) {
+          setBookmarkedBooks(
+            bookmarkedBooks.filter((id) => id !== bookId)
+          );
+        }
+      } else {
+        // Bookmark the book if not already bookmarked
+        const response = await axios.post("/users/api/v1/bookmarkBook", {
+          bookId,
+        });
+        if (response.data.success) {
+          setBookmarkedBooks([...bookmarkedBooks, bookId]);
+        }
+      }
+    } catch (error) {
+      console.error("Error bookmarking/unbookmarking book:", error);
+    }
+  };
+
   return (
     <div className={style.outermost}>
       <div className={style.sec1}>
@@ -97,8 +136,8 @@ const Books = () => {
         <h2 className={style.header}>All arrivals</h2>
         <div className={style.galleryConatiner}>
           {filteredItems.map((book, index) => (
-            <div>
-              <div key={index} className={style.row}>
+            <div key={index}>
+              <div className={style.row}>
                 <div
                   className={style.booki}
                   style={{ "--book-image": `url(${book.bookiImg})` }}
@@ -109,12 +148,28 @@ const Books = () => {
                     className={style.bookiImg}
                   />
                   <div className={style.content}>
-                    <p>{book.description}</p>
+                    <h3>{book.title}</h3>
+                    <h6>{book.year}</h6>
+                    <h5>{book.genre}</h5>
                   </div>
                 </div>
               </div>
               <div className={style.info}>
-                <button className={style.btn}>{book.title}</button>
+                <button
+                  className={style.btn}
+                  onClick={() => toggleBookmark(book._id)}
+                >
+                  {bookmarkedBooks.includes(book._id) ? (
+                    <IoBookmark size={20} />
+                  ) : (
+                    <IoBookmarkOutline size={20} />
+                  )}
+                  <span>
+                    {bookmarkedBooks.includes(book._id)
+                      ? "Unbookmark"
+                      : "Bookmark"}
+                  </span>
+                </button>
               </div>
             </div>
           ))}

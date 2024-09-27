@@ -88,13 +88,16 @@ const AddBooks = ({ setShowNewComponent }) => {
             ref={quantityRef}
           />
         </div>
-        <div
-          className={styles.sendButton}
-          id="submit"
-          type="submit"
-          value="SAVE"
-        >
-          <button>SAVE</button>
+        <div>
+          <button
+            className={styles.button}
+            id="submit"
+            type="submit"
+            value="SAVE"
+            style={{ width: "100%" }}
+          >
+            SAVE
+          </button>
         </div>
       </form>
     </div>

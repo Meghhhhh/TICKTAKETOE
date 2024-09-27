@@ -3,30 +3,32 @@ import styles from "../module/dropdownmenu.module.css";
 
 const DropdownMenu = ({ onFilterChange }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const genreRef = useRef(null);
-  const authorRef = useRef("");
-  const languageRef = useRef(null);
+  const [selectedGenre, setSelectedGenre] = useState(""); // State for selected genre
+  const [selectedAuthor, setSelectedAuthor] = useState(""); // State for selected author
+  const [selectedLanguage, setSelectedLanguage] = useState(""); // State for selected language
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleGenreChange = () => {
-    onFilterChange("genre", genreRef.current.value);
-    setIsOpen(false);
+  const handleGenreChange = (e) => {
+    const genre = e.target.value;
+    setSelectedGenre(genre); // Update state
+    onFilterChange("genre", genre);
   };
 
   const handleAuthorChange = (e) => {
     if (e.key === "Enter") {
-      authorRef.current = e.target.value;
-      onFilterChange("authors", authorRef.current);
-      setIsOpen(false);
+      const author = e.target.value;
+      setSelectedAuthor(author); // Update state
+      onFilterChange("author", author);
     }
   };
 
-  const handleLanguageChange = () => {
-    onFilterChange("language", languageRef.current.value);
-    setIsOpen(false);
+  const handleLanguageChange = (e) => {
+    const language = e.target.value;
+    setSelectedLanguage(language); // Update state
+    onFilterChange("language", language);
   };
 
   return (
@@ -61,16 +63,17 @@ const DropdownMenu = ({ onFilterChange }) => {
           aria-orientation="vertical"
           aria-labelledby="menu-button"
         >
+          {/* Genre Dropdown */}
           <div className={styles.menuItem}>
             <label htmlFor="genreSelect">Genre:</label>
             <select
               id="genreSelect"
               className={styles.formControl}
-              ref={genreRef}
+              value={selectedGenre} // Persist selected genre
               onChange={handleGenreChange}
               required
             >
-              <option value="">Select Genre</option>{" "}
+              <option value="">Select Genre</option>
               <option value="Fiction">Fiction</option>
               <option value="Non-Fiction">Non-Fiction</option>
               <option value="Young-Adult">Young-Adult</option>
@@ -78,28 +81,33 @@ const DropdownMenu = ({ onFilterChange }) => {
               <option value="Graphic-Novels">Graphic-Novels</option>
             </select>
           </div>
+
+          {/* Author Input */}
           <div className={styles.menuItem}>
             <label htmlFor="authorInput">Author:</label>
             <input
               type="text"
               id="authorInput"
               className={styles.formControl}
-              ref={authorRef}
+              value={selectedAuthor} // Persist selected author
+              onChange={(e) => setSelectedAuthor(e.target.value)} // Update state on change
               onKeyDown={handleAuthorChange}
               placeholder="Enter author name"
               required
             />
           </div>
+
+          {/* Language Dropdown */}
           <div className={styles.menuItem}>
             <label htmlFor="languageSelect">Language:</label>
             <select
               id="languageSelect"
               className={styles.formControl}
-              ref={languageRef}
+              value={selectedLanguage} // Persist selected language
               onChange={handleLanguageChange}
               required
             >
-              <option value="">Select Language</option>{" "}
+              <option value="">Select Language</option>
               <option value="en">English</option>
               <option value="es">Spanish</option>
               <option value="fr">French</option>
