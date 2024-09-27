@@ -4,8 +4,8 @@ const { initializeApp } = require("firebase/app");
 const { firebaseConfig } = require("../config/firebase.config");
 const loggedIn = require("../middleware/isLoggedIn.js");
 const isAdmin = require("../middleware/isAdmin");
+const User = require("../models/user.js");
 
-router.use(loggedIn);
 
 const {
   getStorage,
@@ -19,6 +19,9 @@ const catchAsync = require("../utils/asyncMiddleware.js");
 const Resources = require("../models/resources.js");
 const Users = require("../models/user.js");
 const Joi = require("joi");
+const isLoggedIn = require("../middleware/isLoggedIn.js");
+const asyncMiddleware = require("../utils/asyncMiddleware.js");
+const user = require("../models/user.js");
 
 initializeApp(firebaseConfig);
 const storage = getStorage();
@@ -184,9 +187,9 @@ router.post(
 //ADMIN PROTECTED
 router.post(
   "/postResource",
-  isAdmin,
+  // isLoggedIn,
   upload.single("file"),
-  catchAsync(async (req, res) => {
+  asyncMiddleware(async (req, res) => {
     const categories = [
       "text",
       "pdf",
@@ -202,7 +205,8 @@ router.post(
         .valid(...categories)
         .required(),
       description: Joi.string(),
-      link: Joi.string(),
+      link: Joi.string().optional(),
+      userId: Joi.string(),
     });
 
     const { error } = schema.validate(req.body);
@@ -214,13 +218,27 @@ router.post(
         data: null,
       });
 
-    const { title, category, description } = req.body;
+    const { title, category, description, userId } = req.body;
+
+   
+      const userExists = await User.findById(userId);
+      if (!userExists) {
+        return res.json({
+          success: false,
+          status: 404,
+          message: "User not found",
+          data: null,
+        });
+      }
+
+
     if (category === "link") {
       const resource = new Resources({
         title,
         link: req.body.link,
         category,
         description,
+        userId,
       });
       await resource.save();
       return res.json({
@@ -257,6 +275,7 @@ router.post(
         link: downloadURL,
         category,
         description,
+        userId,
       });
       await resource.save();
       return res.json({

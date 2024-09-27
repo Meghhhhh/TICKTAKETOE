@@ -1,4 +1,5 @@
 require("./books.js")
+require("./resources.js")
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
@@ -36,6 +37,10 @@ const userSchema = new mongoose.Schema({
   isAdmin: {
     type: Boolean,
     default: false,
+  },
+resourcesId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Resources",
   },
 
   isLibrarian: { type: Boolean, default: false },
