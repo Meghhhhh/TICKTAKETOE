@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema({
   borrowedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Books" }],
 
   bookHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Books" }],
+  bookmarkedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Books" }],
 });
 
 userSchema.methods.isValidPassword = async function (password) {

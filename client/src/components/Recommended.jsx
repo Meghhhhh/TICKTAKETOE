@@ -47,7 +47,9 @@ const Recommended = () => {
                     className={style.bookiImg}
                   />
                   <div className={style.content}>
-                    <p>{book.description}</p>
+                    <h3 >{book.title}</h3>
+                    <h6>{book.year}</h6>
+                    <h5>{book.genre}</h5>
                   </div>
                 </div>
               </div>

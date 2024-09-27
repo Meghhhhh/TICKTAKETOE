@@ -201,6 +201,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: rgb(255, 255, 255);
+  width: 100%;
   text-align: center;
   opacity: 0;
   transition: opacity 0.3s;
@@ -380,4 +381,8 @@ mask: linear-gradient(
     2px 0px 10px var(--text-color);
   width: 130px;
   height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
 }

@@ -275,4 +275,78 @@ router.get("/getHistory", isLoggedIn, async (req, res) => {
   }
 });
 
+router.post(
+  "/bookmarkBook",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const { bookId } = req.body; // Take bookId from req.body
+    const user = await User.findById(req.user.user._id);
+
+    if (!user.bookmarkedBooks.includes(bookId)) {
+      user.bookmarkedBooks.push(bookId);
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Book bookmarked successfully",
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      status: 400,
+      message: "Book already bookmarked",
+    });
+  })
+);
+router.post(
+  "/unbookmarkBook",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const { bookId } = req.body; // Take bookId from req.body
+    const user = await User.findById(req.user.user._id);
+
+    if (user.bookmarkedBooks.includes(bookId)) {
+      user.bookmarkedBooks = user.bookmarkedBooks.filter(
+        (id) => id.toString() !== bookId
+      );
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Book unbookmarked successfully",
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      status: 400,
+      message: "Book not bookmarked",
+    });
+  })
+);
+router.get(
+  "/getBookmarkedBooks",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const user = await User.findById(req.user.user._id).populate(
+      "bookmarkedBooks"
+    );
+
+    if (!user.bookmarkedBooks || user.bookmarkedBooks.length === 0) {
+      return res.status(404).json({
+        success: false,
+        status: 404,
+        message: "No bookmarked books found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Bookmarked books fetched successfully",
+      data: user.bookmarkedBooks,
+    });
+  })
+);
 module.exports = router;
