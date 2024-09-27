@@ -76,6 +76,7 @@
 .icon {
   font-size: larger;
   margin-left: 1rem;
+  cursor: pointer;
 }
 
 /* Responsive styles */
@@ -103,6 +104,12 @@
   .searchBar {
     width: 70%;
   }
+}
+
+.head{
+  display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 @media (max-width: 480px) {

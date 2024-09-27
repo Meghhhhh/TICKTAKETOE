@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Route, Routes, NavLink, Navigate } from "react-router-dom";
 import styles from "../module/admin.module.css";
-import ResForm from "./UpResources";
 import Form from "./AddBooks";
 import AdminBooks from "./AdminBooks";
 import Librarian from "./Librarian";
 import AddLibrarian from "./AddLibrarian";
+import AddAdmin from "./AddAdmin";
 
 const Admin = () => {
   const [showNewComponent, setShowNewComponent] = useState(false);
   const [showNewComponent1, setShowNewComponent1] = useState(false);
+  const [showNewComponent2, setShowNewComponent2] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -58,6 +59,19 @@ const Admin = () => {
                 Librarian
               </NavLink>
             </li>
+            <li className={styles.sidebarItem}>
+              <NavLink
+                onClick={handleMenuItemClick}
+                className={({ isActive }) =>
+                  isActive
+                    ? `${styles.sidebarLink} ${styles.active}`
+                    : styles.sidebarLink
+                }
+                to="/admin/AddAdmin"
+              >
+                Admin
+              </NavLink>
+            </li>
           </ul>
         </div>
 
@@ -70,12 +84,9 @@ const Admin = () => {
                   <Form setShowNewComponent={setShowNewComponent} />
                 ) : (
                   <>
-                    {/* <MyBooks setShowNewComponent={setShowNewComponent} /> */}
                     <button
                       className={styles.btn}
-                      onClick={() => {
-                        setShowNewComponent(!showNewComponent);
-                      }}
+                      onClick={() => setShowNewComponent(!showNewComponent)}
                     >
                       ADD NEW RESOURCE
                     </button>
@@ -95,13 +106,28 @@ const Admin = () => {
                   <>
                     <button
                       className={styles.btn}
-                      onClick={() => {
-                        setShowNewComponent1(!showNewComponent1);
-                      }}
+                      onClick={() => setShowNewComponent1(!showNewComponent1)}
                     >
                       ADD NEW LIBRARIAN
                     </button>
                     <Librarian />
+                  </>
+                )
+              }
+            />
+            <Route
+              path="/AddAdmin"
+              element={
+                showNewComponent2 ? (
+                  <AddAdmin setShowNewComponent2={setShowNewComponent2} />
+                ) : (
+                  <>
+                    <button
+                      className={styles.btn}
+                      onClick={() => setShowNewComponent2(!showNewComponent2)}
+                    >
+                      ADD NEW ADMIN
+                    </button>
                   </>
                 )
               }
