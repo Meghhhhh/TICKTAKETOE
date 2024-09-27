@@ -4,25 +4,26 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import style from "../module/upresources.module.css";
 
-const AddLibrarian = ({ setShowNewComponent1 }) => {
+const AddAdmin = ({ setShowNewComponent2 }) => {
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/users/api/v1/createLibrarian", { email });
+      const response = await axios.post("/users/api/v1/createAdmin", { email });
       toast.success(response?.data?.message, {
-        onClose: () => setShowNewComponent1(false),
+        onClose: () => setShowNewComponent2(false),
       });
     } catch (error) {
-      console.error("Error adding librarian:", error);
+      console.error("Error adding Admin:", error);
+      
       toast.error(
         error.response?.data?.message || "Failed to add admin. Please try again."
       );
     }
   };
 
-  return ( 
+  return (
     <div className={style.formContainer} style={{ width: "100%" }}>
       <ToastContainer />
       <form onSubmit={handleSubmit} className={style.contactForm}>
@@ -42,13 +43,13 @@ const AddLibrarian = ({ setShowNewComponent1 }) => {
             className={style.button}
             style={{ width: "40%" }}
           >
-            Add Librarian
+            Add Admin
           </button>
           <button
             type="button"
             className={style.button}
             style={{ width: "40%" }}
-            onClick={() => setShowNewComponent1(false)}
+            onClick={() => setShowNewComponent2(false)}
           >
             Cancel
           </button>
@@ -58,4 +59,4 @@ const AddLibrarian = ({ setShowNewComponent1 }) => {
   );
 };
 
-export default AddLibrarian;
+export default AddAdmin;

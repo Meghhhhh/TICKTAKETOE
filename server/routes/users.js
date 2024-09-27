@@ -126,10 +126,18 @@ router.post(
       });
     }
 
+    if(user.isAdmin)
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "User is already an admin",
+        data: null,
+      });
+
     user.isAdmin = true;
     const newUser = await user.save();
 
-    res.json({
+    return res.status(200).json({
       success: true,
       status: 200,
       message: "Admin added successfully",
@@ -193,7 +201,7 @@ router.delete(
     user.isLibrarian = false;
     const newUser = await user.save();
 
-    res.json({
+    res.status(200).json({
       success: true,
       status: 200,
       message: "Librarian removed successfully",

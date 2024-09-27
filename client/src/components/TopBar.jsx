@@ -117,6 +117,7 @@ const TopBar = () => {
       {location.pathname !== "/auth/login" &&
         location.pathname !== "/admin/books" &&
         location.pathname !== "/admin/librarian" &&
+        location.pathname !== "/admin/AddAdmin" &&
         location.pathname !== "/auth/register" && <Navbar />}
       {window.innerWidth > 1024 ? (
         <div className={style.rightComponent}>
