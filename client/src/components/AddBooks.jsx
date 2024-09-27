@@ -7,8 +7,10 @@ import Loader from "./Loader";
 const AddBooks = ({ setShowNewComponent }) => {
   const [loading, setLoading] = useState(false);
   const isbnRef = useRef("");
+  const isbnRef1 = useRef("");
   const genreRef = useRef("current");
   const quantityRef = useRef("");
+  const quantityRef1 = useRef("");
 
   const handleBlankCardClick = () => {
     setShowNewComponent((showNewComponent) => !showNewComponent);
@@ -26,6 +28,31 @@ const AddBooks = ({ setShowNewComponent }) => {
       .post(
         `/books/api/v1/addBook`,
         { ISBN, genre, quantity },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  };
+  const handleSubmit1 = (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    const ISBN = isbnRef1.current.value;
+
+    const quantity = quantityRef1.current.value;
+
+    axios
+      .post(
+        `/books/api/v1/updateQuantity`,
+        { ISBN,  quantity },
         {
           withCredentials: true,
         }
@@ -86,6 +113,44 @@ const AddBooks = ({ setShowNewComponent }) => {
             placeholder="QUANTITY"
             name="quantity"
             ref={quantityRef}
+          />
+        </div>
+        <div
+          className={styles.sendButton}
+          id="submit"
+          type="submit"
+          value="SAVE"
+        >
+          <button>SAVE</button>
+        </div>
+      </form>
+      <form
+        id="contact-form"
+        className={styles.contactForm}
+        onSubmit={handleSubmit1}
+      >
+        <div className={styles.formGroup}>
+          <label className={styles.label}>ISBN</label>
+          <input
+            type="text"
+            className={styles.formControl}
+            id="ISBN"
+            placeholder="ISBN"
+            name="ISBN"
+            ref={isbnRef1}
+            required
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Quantity</label>
+          <input
+            type="text"
+            className={styles.formControl}
+            id="quantity"
+            placeholder="QUANTITY"
+            name="quantity"
+            ref={quantityRef1}
           />
         </div>
         <div
