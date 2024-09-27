@@ -59,7 +59,7 @@ router.post(
           description: resp.data.items[0].volumeInfo.description,
           authors: resp.data.items[0].volumeInfo.authors,
           year: resp.data.items[0].volumeInfo.publishedDate,
-          thumbnail: resp.data.items[0].volumeInfo.imageLinks.smallThumbnail,
+          thumbnail: resp.data.items[0].volumeInfo.imageLinks?.smallThumbnail,
         });
 
         await newBook.save();
@@ -77,7 +77,7 @@ router.post(
 router.post(
   "/updateQuantity",
   [isLoggedIn, isAdmin],
-  catchAsync(async (req, resp) => {
+  catchAsync(async (req, resp) => {    
     const { quantity, ISBN } = req.body;
     const book = await Book.findOne({ ISBN });
     if (!book)
@@ -88,7 +88,7 @@ router.post(
         data: null,
       });
 
-    book.quantity = book.quantity + quantity;
+    book.quantity = book.quantity + parseInt(quantity);
     const updatedBook = await book.save();
     resp.status(200).json({
       success: true,
