@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root Variables for Dark Mode (default) */
+:root {
+  --body-font: "Baskervville", serif;
+  --head-font: "Playfair Display", serif;
+
+  --primary-color: #004D4D; /* Deep Teal */
+  --secondary-color: #1F1F1F; /* Charcoal */
+  --tertiary-color: #66B2B2; /* Soft Sky Blue */
+  --text-color: #E8E8E8; /* Soft White */
+  --grid-color: #B0B0B0; /* Light Gray */
+  --bg-glass: rgba(0, 77, 77, 0.7); /* Semi-transparent Teal */
+  --gen-col: #000000; /* Bright Yellow */
+}
+
+/* Light Theme Colors */
+[data-theme="light"] {
+  --primary-color: #B2EBF2; /* Light Cyan */
+  --secondary-color: #ffffff; /* Charcoal */
+  --tertiary-color: #004D4D; /* Deep Teal */
+  --text-color: #333333; /* Dark Gray */
+  --grid-color: #99D5DB; /* Slightly Darker Cyan */
+  --bg-glass: rgba(102, 178, 178, 0.5); /* Light Teal */
+  --gen-col: #ffffff; /* Bright Yellow */
+}
+
+body {
+  font-family: var(--body-font);
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-color); /* Background based on theme */
+  color: var(--text-color); /* Text color based on theme */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: all 0.3s ease; /* Smooth transitions */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--head-font);
+  color: var(--text-color); /* Headings use theme text color */
+  margin: 0 0 1rem 0;
+  transition: color 0.3s ease;
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+
+button {
+  background-color: var(--primary-color);
+  color: var(--text-color); /* Charcoal text */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--text-color); /* Swap colors on hover */
+  color: var(--gen-col);
+}

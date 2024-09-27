@@ -1,0 +1,113 @@
+.imageContainer {
+  position: relative;
+  width: 100vw;
+  height: 35rem;
+  box-shadow: 0 8px 32px 0 var(--glassmorph-color2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-sizing: border-box;
+  background-size: cover;
+  background-attachment: fixed;
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 0.5fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    " . .  ."
+    ". intro  boy "
+    ". .  .";
+  align-items: center;
+  margin: 15vh auto;
+  justify-content: center;
+}
+
+.textOverlay {
+  position: absolute;
+  font-size: 30px;
+  color: var(--text-color);
+  border-radius: 1em;
+  max-width: 100%;
+  text-align: center;
+  grid-area: intro;
+}
+
+.paraImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-area: boy;
+}
+
+.textOverlay p {
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+  .imageContainer {
+    width: 70vw;
+  }
+
+  .textOverlay {
+    font-size: 1.5vw;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .imageContainer {
+    width: 80vw;
+    height: 30rem;
+  }
+  .paraImg {
+    width: 20em;
+  }
+  .textOverlay {
+    font-size: 1.8vw;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 768px) {
+  .imageContainer {
+    width: 90vw;
+    height: 30rem;
+    grid-template-columns: 0.5fr 3fr 0.5fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      " . boy  ."
+      ". intro .";
+    align-items: center;
+    justify-content: center;
+  }
+
+  .paraImg {
+    width: 15em;
+    align-self: center;
+    justify-self: center;
+  }
+}
+@media (max-width: 600px) {
+  .imageContainer {
+    width: 90vw;
+    height: 40rem;
+    grid-template-columns: 0.5fr 3fr 0.5fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      " . boy  ."
+      ". intro .";
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0;
+  }
+
+  .paraImg {
+    width: 15em;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .textOverlay {
+    font-size: 3vw;
+    padding: 1em;
+  }
+}
