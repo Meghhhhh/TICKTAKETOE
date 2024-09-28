@@ -72,7 +72,7 @@ router.post(
 );
 
 
-router.get(
+router.post(
   "/searchResources",
   catchAsync(async (req, res) => {
     const query = req.body.keyword;
