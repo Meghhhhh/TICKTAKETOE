@@ -7,6 +7,14 @@
     padding-top: 5rem; 
   }
   
+  .noBooksMessage {
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+    font-style: italic;
+  }
+  
   .element {
     padding: 1.5rem;
     border-radius: 1rem;

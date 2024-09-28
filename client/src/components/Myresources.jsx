@@ -29,7 +29,6 @@ const Myresources = () => {
         data: { id },
       });
       if (response.data.success) {
-        // Filter out the deleted resource from the state
         setResources(resources.filter((resource) => resource._id !== id));
       } else {
         console.error("Failed to delete resource:", response.data.message);
@@ -45,29 +44,33 @@ const Myresources = () => {
 
   return (
     <div className={styles.container}>
-      {resources.map((resource) => (
-        <div key={resource._id} className={styles.card}>
-          <h3 className={styles.title}>{resource.title}</h3>
-          <p className={styles.description}>{resource.description}</p>
-          <p className={styles.category}>Category: {resource.category}</p>
-          {resource.link && (
-            <a
-              href={resource.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.link}
+      {resources.length === 0 ? (
+        <div className={styles.noResourcesMessage}>No resources available</div>
+      ) : (
+        resources.map((resource) => (
+          <div key={resource._id} className={styles.card}>
+            <h3 className={styles.title}>{resource.title}</h3>
+            <p className={styles.description}>{resource.description}</p>
+            <p className={styles.category}>Category: {resource.category}</p>
+            {resource.link && (
+              <a
+                href={resource.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.link}
+              >
+                View Resource
+              </a>
+            )}
+            <button
+              className={styles.deleteButton}
+              onClick={() => handleDelete(resource._id)}
             >
-              View Resource
-            </a>
-          )}
-          <button
-            className={styles.deleteButton}
-            onClick={() => handleDelete(resource._id)}
-          >
-            Delete
-          </button>
-        </div>
-      ))}
+              Delete
+            </button>
+          </div>
+        ))
+      )}
     </div>
   );
 };
