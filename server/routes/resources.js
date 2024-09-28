@@ -76,9 +76,15 @@ router.post(
   "/searchResources",
   catchAsync(async (req, res) => {
     const query = req.body.keyword;
+
+    // Search for resources and populate the user's name field from the User model
     const resources = await Resources.find({
       title: { $regex: query, $options: "i" },
+    }).populate({
+      path: "userId", // Path to populate userId
+      select: "name", // Only fetch the user's name
     });
+
     if (resources.length === 0)
       return res.json({
         success: false,

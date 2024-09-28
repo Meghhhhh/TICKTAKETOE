@@ -385,24 +385,28 @@ router.get(
   "/getBookmarkedBooks",
   isLoggedIn,
   catchAsync(async (req, res) => {
-    const user = await User.findById(req.user.user._id).populate(
-      "bookmarkedBooks"
-    );
+    try {
+      const user = await User.findById(req.user.user._id).populate(
+        "bookmarkedBooks"
+      );
 
-    if (!user.bookmarkedBooks || user.bookmarkedBooks.length === 0) {
-      return res.status(404).json({
-        success: false,
-        status: 404,
-        message: "No bookmarked books found",
+      if (!user.bookmarkedBooks || user.bookmarkedBooks.length === 0) {
+        return res.status(404).json({
+          success: false,
+          status: 404,
+          message: "No bookmarked books found",
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Bookmarked books fetched successfully",
+        data: user.bookmarkedBooks,
       });
+    } catch (error) {
+      console.log(error);
     }
-
-    res.status(200).json({
-      success: true,
-      status: 200,
-      message: "Bookmarked books fetched successfully",
-      data: user.bookmarkedBooks,
-    });
   })
 );
 
@@ -410,34 +414,41 @@ router.get(
   "/getFavouriteResources",
   isLoggedIn,
   catchAsync(async (req, res) => {
-    const user = await User.findById(req.user.user._id).populate(
-      "favouriteResources"
-    );
-
-    if (
-      !user ||
-      !user.favouriteResources ||
-      user.favouriteResources.length === 0
-    ) {
-      return res.status(404).json({
-        success: false,
-        status: 404,
-        message: "No favourite resources found",
-        data: null,
+    try {
+      const user = await User.findById(req.user.user._id).populate(
+        "favouriteResources"
+      );
+  
+      if (
+        !user ||
+        !user.favouriteResources ||
+        user.favouriteResources.length === 0
+      ) {
+        return res.status(404).json({
+          success: false,
+          status: 404,
+          message: "No favourite resources found",
+          data: null,
+        });
+      }
+  
+      res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Favourite resources fetched successfully",
+        data: user.favouriteResources,
       });
+    } catch (error) {
+      console.log(error);
     }
 
-    res.status(200).json({
-      success: true,
-      status: 200,
-      message: "Favourite resources fetched successfully",
-      data: user.favouriteResources,
-    });
   })
 );
 
 router.get("/getBookmarkedBooks", isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user.user._id).populate("bookmarkedBooks");
+  const user = await User.findById(req.user.user._id).populate(
+    "bookmarkedBooks"
+  );
   res.status(200).json({
     success: true,
     data: user.bookmarkedBooks,
@@ -445,7 +456,9 @@ router.get("/getBookmarkedBooks", isLoggedIn, async (req, res) => {
 });
 
 router.get("/getFavouriteResources", isLoggedIn, async (req, res) => {
-  const user = await User.findById(req.user.user._id).populate("favouriteResources");
+  const user = await User.findById(req.user.user._id).populate(
+    "favouriteResources"
+  );
   res.status(200).json({
     success: true,
     data: user.favouriteResources,
