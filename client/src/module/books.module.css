@@ -76,6 +76,8 @@
   margin: 40px auto;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 /* hsl(20, 43%, 93%) */

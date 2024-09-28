@@ -87,7 +87,7 @@ const Bookmarks = () => {
     <div>
       <h2
         className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`}
-        id="section-title2"
+        id="section-title2" style={{marginTop:"150px"}}
       >
         Bookmarked Books
         <span className={style.span} />
