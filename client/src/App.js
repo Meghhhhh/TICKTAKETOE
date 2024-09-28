@@ -16,6 +16,7 @@ import PaymentFailed from "./components/PaymentFailed";
 import Libadmin from "./components/Libadmin";
 import PaymentSuccess from "./components/PaymentSuccess";
 import Myresources from "./components/Myresources";
+import Addresources from "./components/Addresources";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/paymentfailed" element={<PaymentFailed />} />
             <Route path="/paymentSuccess" element={<PaymentSuccess />} />
             <Route path="/myresources" element={<Myresources />} />
+            <Route path="/addresources" element={<Addresources />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/aboutus" element={<About />} />
             <Route path="/books" element={<Books />} />

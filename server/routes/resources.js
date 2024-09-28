@@ -119,7 +119,7 @@ router.post(
 router.post(
   "/postResource",
   // isLoggedIn,
-  upload.single("file"),
+  upload.fields([{ name: "thumbnail" }, { name: "file" }]), // Allow multiple fields
   asyncMiddleware(async (req, res) => {
     const categories = [
       "text",
@@ -151,17 +151,15 @@ router.post(
 
     const { title, category, description, userId } = req.body;
 
-   
-      const userExists = await User.findById(userId);
-      if (!userExists) {
-        return res.json({
-          success: false,
-          status: 404,
-          message: "User not found",
-          data: null,
-        });
-      }
-
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "User not found",
+        data: null,
+      });
+    }
 
     if (category === "link") {
       const resource = new Resources({
@@ -179,7 +177,9 @@ router.post(
         data: resource,
       });
     } else {
-      const file = req.file;
+      const file = req.files.file ? req.files.file[0] : null; // Accessing the uploaded file
+      const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null; // Accessing the uploaded thumbnail
+
       if (!file) {
         return res.json({
           success: false,
@@ -188,11 +188,27 @@ router.post(
           data: null,
         });
       }
+
+      if (!thumbnail) {
+        return res.json({
+          success: false,
+          status: 400,
+          message: "No thumbnail uploaded",
+          data: null,
+        });
+      }
+
       const fileName = `${Date.now()}_${file.originalname}`;
+      const thumbnailName = `${Date.now()}_thumbnail_${thumbnail.originalname}`;
+
       const storageRef = ref(storage, `resources/${fileName}`);
+      const thumbnailRef = ref(storage, `resources/${thumbnailName}`);
+
       const metadata = {
         contentType: file.mimetype,
       };
+
+      // Upload the main file
       const uploadTask = await uploadBytesResumable(
         storageRef,
         file.buffer,
@@ -200,10 +216,25 @@ router.post(
       );
       const downloadURL = await getDownloadURL(uploadTask.ref);
 
+      // Upload the thumbnail
+      const thumbnailMetadata = {
+        contentType: thumbnail.mimetype,
+      };
+      const thumbnailUploadTask = await uploadBytesResumable(
+        thumbnailRef,
+        thumbnail.buffer,
+        thumbnailMetadata
+      );
+      const thumbnailDownloadURL = await getDownloadURL(
+        thumbnailUploadTask.ref
+      );
+
       const resource = new Resources({
         fileName,
         title,
         link: downloadURL,
+        thumbnail: thumbnailDownloadURL, // Save the thumbnail URL
+        thumbnailName,
         category,
         description,
         userId,
@@ -221,108 +252,129 @@ router.post(
 
 router.put(
   "/updateResource",
-  isAdmin,
+  upload.fields([
+    { name: "thumbnail", optional: true },
+    { name: "file", optional: true },
+  ]), // Optional file fields
   catchAsync(async (req, res) => {
     const { title, category, description } = req.body;
+    const updates = { title, category, description };
 
     if (category === "link") {
-      const updatedResource = await Resources.findByIdAndUpdate(
-        req.body.id,
-        { title, category, description, link: req.body.link },
-        { new: true, runValidators: true }
-      );
-
-      if (!updatedResource) {
-        return res.json({
-          success: false,
-          status: 404,
-          message: "Resource not found",
-          data: null,
-        });
-      }
-
-      res.json({
-        success: true,
-        status: 200,
-        message: "Resource updated successfully",
-        data: updatedResource,
-      });
+      updates.link = req.body.link; // Always include link for links
     } else {
-      const updatedResource = await Resources.findByIdAndUpdate(
-        req.body.id,
-        { title, category, description },
-        { new: true, runValidators: true }
-      );
-
-      if (!updatedResource) {
-        return res.json({
-          success: false,
-          status: 404,
-          message: "Resource not found",
-          data: null,
-        });
+      // Handle file uploads
+      if (req.files.file && req.files.file.length > 0) {
+        const file = req.files.file[0];
+        const fileName = `${Date.now()}_${file.originalname}`;
+        const storageRef = ref(storage, `resources/${fileName}`);
+        const metadata = {
+          contentType: file.mimetype,
+        };
+        const uploadTask = await uploadBytesResumable(
+          storageRef,
+          file.buffer,
+          metadata
+        );
+        updates.link = await getDownloadURL(uploadTask.ref); // Update the link with the new file URL
+        updates.fileName = fileName; // Update the filename
       }
 
-      res.json({
-        success: true,
-        status: 200,
-        message: "Resource updated successfully",
-        data: updatedResource,
+      if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+        const thumbnail = req.files.thumbnail[0];
+        const thumbnailName = `${Date.now()}_thumbnail_${
+          thumbnail.originalname
+        }`;
+        const thumbnailRef = ref(storage, `resources/${thumbnailName}`);
+        const thumbnailMetadata = {
+          contentType: thumbnail.mimetype,
+        };
+        const thumbnailUploadTask = await uploadBytesResumable(
+          thumbnailRef,
+          thumbnail.buffer,
+          thumbnailMetadata
+        );
+        updates.thumbnail = await getDownloadURL(thumbnailUploadTask.ref); // Update the thumbnail URL
+        updates.thumbnailName = thumbnailName; // Update the thumbnail name
+      }
+    }
+
+    const updatedResource = await Resources.findByIdAndUpdate(
+      req.body.id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedResource) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "Resource not found",
+        data: null,
       });
     }
+
+    res.json({
+      success: true,
+      status: 200,
+      message: "Resource updated successfully",
+      data: updatedResource,
+    });
   })
 );
 
 router.delete(
   "/deleteResource",
-  isAdmin,
   catchAsync(async (req, res) => {
-    // console.log(req.body);
     const { id } = req.body;
-    // if (!Array.isArray(ids)) {
-    //   return res.json({
-    //     success: false,
-    //     status: 400,
-    //     message: "ids should be an array of resource Ids",
-    //     data: null,
-    //   });
-    // }
 
-    const resources = await Resources.findById(id);
-    if (resources.length === 0) {
+    const resource = await Resources.findById(id);
+    if (!resource) {
       return res.json({
         success: false,
         status: 404,
-        message: "Resources not found",
+        message: "Resource not found",
         data: null,
       });
     }
 
-    if (resources.category === "link") {
-      const deletedResources = await Resources.findByIdAndDelete(id);
-      res.json({
+    if (resource.category === "link") {
+      const deletedResource = await Resources.findByIdAndDelete(id);
+      return res.json({
         success: true,
         status: 200,
-        message: "Resources deleted successfully",
-        data: deletedResources,
+        message: "Resource deleted successfully",
+        data: deletedResource,
       });
     } else {
       try {
-        const desertRef = ref(storage, `resources/${resources.fileName}`);
-        await deleteObject(desertRef);
+        // Delete the file if it exists
+        if (resource.fileName) {
+          const fileRef = ref(storage, `resources/${resource.fileName}`);
+          await deleteObject(fileRef);
+        }
 
-        const deletedResources = await Resources.findByIdAndDelete(id);
-        res.json({
+        // Delete the thumbnail if it exists
+        if (resource.thumbnailName) {
+          const thumbnailRef = ref(
+            storage,
+            `resources/${resource.thumbnailName}`
+          );
+          await deleteObject(thumbnailRef);
+        }
+
+        const deletedResource = await Resources.findByIdAndDelete(id);
+        return res.json({
           success: true,
           status: 200,
-          message: "Resources deleted successfully",
-          data: deletedResources,
+          message: "Resource deleted successfully",
+          data: deletedResource,
         });
       } catch (error) {
         return res.json({
           success: false,
           status: 400,
-          message: error._baseMessage,
+          message: error.message || "Error deleting resources",
           data: null,
         });
       }
