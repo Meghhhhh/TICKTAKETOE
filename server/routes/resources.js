@@ -27,19 +27,13 @@ initializeApp(firebaseConfig);
 const storage = getStorage();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get(
+router.post(
   "/getResources",
   catchAsync(async (req, res) => {
-    if (!req.body.id) {
-      const resources = await Resources.find().sort({ createdAt: -1 });
-      res.json({
-        success: true,
-        status: 200,
-        message: "Resources retrieved successfully",
-        data: resources,
-      });
-    } else {
-      const resource = await Resources.findById(req.body.id);
+    const { id, userId } = req.body;
+
+    if (id) {
+      const resource = await Resources.findById(id);
       if (!resource)
         return res.json({
           success: false,
@@ -48,11 +42,29 @@ router.get(
           data: null,
         });
 
-      res.json({
+      return res.json({
         success: true,
         status: 200,
         message: "Resource retrieved successfully",
         data: resource,
+      });
+    } else if (userId) {
+      const resources = await Resources.find({ userId }).sort({
+        createdAt: -1,
+      });
+      return res.json({
+        success: true,
+        status: 200,
+        message: "Resources retrieved successfully",
+        data: resources,
+      });
+    } else {
+      const resources = await Resources.find().sort({ createdAt: -1 });
+      return res.json({
+        success: true,
+        status: 200,
+        message: "Resources retrieved successfully",
+        data: resources,
       });
     }
   })
@@ -103,88 +115,7 @@ router.post(
   })
 );
 
-router.post(
-  "/favouriteResource",
-  catchAsync(async (req, res) => {
-    const user = await Users.findById(req.user.user._id);
-    if (!user)
-      return res.json({
-        success: false,
-        status: 400,
-        message: "Invalid user ID",
-        data: null,
-      });
 
-    if (user.favouriteResources.includes(req.body.resourceId))
-      return res.json({
-        success: false,
-        status: 400,
-        message: "User has already the resource favourited",
-        data: null,
-      });
-
-    user.favouriteResources.push(req.body.resourceId);
-    await user.save();
-
-    res.json({
-      success: true,
-      status: 200,
-      message: "Resource added to user favourites successfully",
-      data: null,
-    });
-  })
-);
-
-router.post(
-  "/unfavouriteResource",
-  catchAsync(async (req, res) => {
-    const user = await Users.findById(req.user.user._id);
-    if (!user)
-      return res.json({
-        success: false,
-        status: 400,
-        message: "Invalid user ID",
-        data: null,
-      });
-
-    user.favouriteResources.pull(req.body.resourceId);
-    await user.save();
-
-    res.json({
-      success: true,
-      status: 200,
-      message: "Resource removed from favourites successfully",
-      data: null,
-    });
-  })
-);
-
-router.post(
-  "/getFavourites",
-  catchAsync(async (req, res) => {
-    const user = await Users.findById(req.user.user._id).populate(
-      "favouriteResources",
-      "fileName title description category link"
-    );
-    if (!user)
-      return res.json({
-        success: false,
-        status: 404,
-        message: "No user found",
-        data: null,
-      });
-
-    const userFavourites = user.favouriteResources;
-    res.json({
-      success: true,
-      status: 200,
-      message: "User favourites retrieved successfully",
-      data: userFavourites,
-    });
-  })
-);
-
-//ADMIN PROTECTED
 router.post(
   "/postResource",
   // isLoggedIn,
