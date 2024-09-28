@@ -71,6 +71,8 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error}</p>
+      ) : currentItems.length === 0 ? (
+        <p className={style.noResourcesMessage}>No resources available</p>
       ) : (
         <div className={style.galleryContainer}>
           {currentItems.map((resource, index) => (

@@ -13,6 +13,20 @@
   cursor: pointer;
 }
 
+/* No Resources Message */
+.noResourcesMessage {
+  text-align: center;
+  color: var(--text-color); /* Use your existing text color variable */
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 20px auto;
+  background-color: var(--bg-glass); /* Light red background for emphasis */
+  padding: 10px;
+  border-radius: 5px;
+  width: 80%; /* Adjust the width for better centering */
+}
+
+
 .pageLink {
   padding: 8px 16px;
   border: 1px solid #ccc;
@@ -158,9 +172,11 @@
 
 .searchInput {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--primary-color);
   border-radius: 5px;
+  color: var(--text-color);
   font-size: 1rem;
+  background: transparent;
   width: 100%;
   max-width: 300px; /* Max width for better responsiveness */
   transition: border-color 0.3s;
@@ -169,7 +185,6 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: #007bff;
 }
 
 .searchButton {

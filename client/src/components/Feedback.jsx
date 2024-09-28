@@ -29,7 +29,7 @@ const Feedback = () => {
 
     axios
       .post(
-        'feedback/api/v1/postFeedback',
+        "feedback/api/v1/postFeedback",
         {
           feedback,
           bookName,
@@ -44,7 +44,7 @@ const Feedback = () => {
             autoClose: 1000,
             closeButton: false,
             onClose: () => {
-              navigate('/');
+              navigate("/");
             },
           });
         } else {
@@ -66,7 +66,7 @@ const Feedback = () => {
   const searchBookByTitle = async (title) => {
     try {
       const response = await axios.post(
-        '/books/api/v1/searchBookByTitle',
+        "/books/api/v1/searchBookByTitle",
         { title },
         { withCredentials: true }
       );
@@ -90,9 +90,9 @@ const Feedback = () => {
   };
 
   const handleBookSelect = (book) => {
-    setBookName(book.title);  // Update bookName with the selected book's title
-    setShowDropdown(false);   // Hide the dropdown after selection
-    setSearchResults([]);      // Clear previous search results
+    setBookName(book.title); // Update bookName with the selected book's title
+    setShowDropdown(false); // Hide the dropdown after selection
+    setSearchResults([]); // Clear previous search results
   };
 
   if (loading) {
@@ -109,7 +109,11 @@ const Feedback = () => {
               We appreciate your valuable feedback.
             </h1>
           </header>
-          <form id="survey-form" className={style.form1} onSubmit={handleSubmit}>
+          <form
+            id="survey-form"
+            className={style.form1}
+            onSubmit={handleSubmit}
+          >
             <fieldset>
               <label htmlFor="bookname" className={style.label1}>
                 Book Name
@@ -125,7 +129,7 @@ const Feedback = () => {
               />
               {showDropdown && (
                 <ul className={style.dropdown}>
-                  {searchResults.length > 0 ? (
+                  {searchResults && searchResults.length > 0 ? (
                     searchResults.map((book) => (
                       <li
                         key={book._id}
@@ -154,7 +158,9 @@ const Feedback = () => {
               ></textarea>
             </fieldset>
             <fieldset>
-              <p className={style.rateTit}>How much would you like to rate us?</p>
+              <p className={style.rateTit}>
+                How much would you like to rate us?
+              </p>
               <div className={style.starRating}>
                 {[...Array(5)].map((star, index) => {
                   const ratingValue = index + 1;

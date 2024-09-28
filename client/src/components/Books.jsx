@@ -96,9 +96,7 @@ const Books = () => {
           bookId,
         });
         if (response.data.success) {
-          setBookmarkedBooks(
-            bookmarkedBooks.filter((id) => id !== bookId)
-          );
+          setBookmarkedBooks(bookmarkedBooks.filter((id) => id !== bookId));
         }
       } else {
         // Bookmark the book if not already bookmarked
@@ -134,46 +132,54 @@ const Books = () => {
 
       <div className={style.sec3}>
         <h2 className={style.header}>All arrivals</h2>
-        <div className={style.galleryConatiner}>
-          {filteredItems.map((book, index) => (
-            <div key={index}>
-              <div className={style.row}>
-                <div
-                  className={style.booki}
-                  style={{ "--book-image": `url(${book.bookiImg})` }}
-                >
-                  <img
-                    src={book.thumbnail}
-                    alt={`Book ${index + 1}`}
-                    className={style.bookiImg}
-                  />
-                  <div className={style.content}>
-                    <h3>{book.title}</h3>
-                    <h6>{book.year}</h6>
-                    <h5>{book.genre}</h5>
+
+        {/* Conditional rendering for no books available */}
+        {filteredItems.length === 0 ? (
+          <p className={style.noResourcesMessage}>
+            No books found matching your search or filter criteria.
+          </p>
+        ) : (
+          <div className={style.galleryConatiner}>
+            {filteredItems.map((book, index) => (
+              <div key={index}>
+                <div className={style.row}>
+                  <div
+                    className={style.booki}
+                    style={{ "--book-image": `url(${book.bookiImg})` }}
+                  >
+                    <img
+                      src={book.thumbnail}
+                      alt={`Book ${index + 1}`}
+                      className={style.bookiImg}
+                    />
+                    <div className={style.content}>
+                      <h3>{book.title}</h3>
+                      <h6>{book.year}</h6>
+                      <h5>{book.genre}</h5>
+                    </div>
                   </div>
                 </div>
+                <div className={style.info}>
+                  <button
+                    className={style.btn}
+                    onClick={() => toggleBookmark(book._id)}
+                  >
+                    {bookmarkedBooks.includes(book._id) ? (
+                      <IoBookmark size={20} />
+                    ) : (
+                      <IoBookmarkOutline size={20} />
+                    )}
+                    <span>
+                      {bookmarkedBooks.includes(book._id)
+                        ? "Unbookmark"
+                        : "Bookmark"}
+                    </span>
+                  </button>
+                </div>
               </div>
-              <div className={style.info}>
-                <button
-                  className={style.btn}
-                  onClick={() => toggleBookmark(book._id)}
-                >
-                  {bookmarkedBooks.includes(book._id) ? (
-                    <IoBookmark size={20} />
-                  ) : (
-                    <IoBookmarkOutline size={20} />
-                  )}
-                  <span>
-                    {bookmarkedBooks.includes(book._id)
-                      ? "Unbookmark"
-                      : "Bookmark"}
-                  </span>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
