@@ -126,7 +126,7 @@ router.post(
       });
     }
 
-    if(user.isAdmin)
+    if (user.isAdmin)
       return res.status(400).json({
         success: false,
         status: 400,
@@ -405,4 +405,35 @@ router.get(
     });
   })
 );
+
+router.get(
+  "/getFavouriteResources",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const user = await User.findById(req.user.user._id).populate(
+      "favouriteResources"
+    );
+
+    if (
+      !user ||
+      !user.favouriteResources ||
+      user.favouriteResources.length === 0
+    ) {
+      return res.status(404).json({
+        success: false,
+        status: 404,
+        message: "No favourite resources found",
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Favourite resources fetched successfully",
+      data: user.favouriteResources,
+    });
+  })
+);
+
 module.exports = router;

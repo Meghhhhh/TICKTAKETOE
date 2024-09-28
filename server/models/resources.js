@@ -26,10 +26,6 @@ const Resources = mongoose.model(
       type: Date,
       default: Date.now,
     },
-
-    // { timestamps: true }
-
-    bookmarkedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   })
 );
 
