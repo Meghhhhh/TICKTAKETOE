@@ -49,6 +49,7 @@ resourcesId: {
 
   bookHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Books" }],
   bookmarkedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Books" }],
+  favouriteResources : [{ type: mongoose.Schema.Types.ObjectId, ref: "Resources" }],
 });
 
 userSchema.methods.isValidPassword = async function (password) {
