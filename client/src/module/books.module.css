@@ -375,6 +375,7 @@ mask: linear-gradient(
   color: var(--text-color);
   font-size: 17px;
 }
+
 .btn {
   color: var(--text-color-alt);
   background-color: var(--bg-glass);
@@ -387,4 +388,16 @@ mask: linear-gradient(
   justify-content: center;
   align-items: center;
   gap: 2px;
+}
+
+.noResourcesMessage {
+  text-align: center;
+  color: var(--text-color); /* Use your existing text color variable */
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 20px auto;
+  background-color: var(--bg-glass); /* Light red background for emphasis */
+  padding: 10px;
+  border-radius: 5px;
+  width: 80%; /* Adjust the width for better centering */
 }
