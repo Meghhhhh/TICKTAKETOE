@@ -39,11 +39,15 @@ justify-content: center;
 }
 .imageOuter{
     width: 50%;
-    height: 100%;
+    height: auto;
+    padding: 50px;
+
 }
 .firstImg{
     width: 100%;
     height: 100%;
+        border-radius: 50%;
+        
 }
 .gridBack{
     width: 80%;
