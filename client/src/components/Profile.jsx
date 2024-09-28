@@ -93,6 +93,7 @@ const Profile = () => {
       .then((response) => {
         if (response.data.success) {
           toast.success("Logged out successfully!");
+           localStorage.removeItem("userId");
           setTimeout(() => {
             window.location.href = "/auth/login";
           }, 1500); // 1.5 seconds delay
