@@ -430,59 +430,6 @@ router.post(
 );
 
 router.post(
-  "/bookmarkResource",
-  isLoggedIn,
-  catchAsync(async (req, res) => {
-    const { resourceId } = req.body; // Take resourceId from req.body
-    const user = await User.findById(req.user.user._id);
-
-    if (!user.favouriteResources.includes(resourceId)) {
-      user.favouriteResources.push(resourceId);
-      await user.save();
-      return res.status(200).json({
-        success: true,
-        status: 200,
-        message: "Resource bookmarked successfully",
-      });
-    }
-
-    return res.status(400).json({
-      success: false,
-      status: 400,
-      message: "Resource already bookmarked",
-    });
-  })
-);
-
-router.post(
-  "/unbookmarkResource",
-  isLoggedIn,
-  catchAsync(async (req, res) => {
-    const { resourceId } = req.body; // Take resourceId from req.body
-    const user = await User.findById(req.user.user._id);
-
-    if (user.favouriteResources.includes(resourceId)) {
-      user.favouriteResources = user.favouriteResources.filter(
-        (id) => id.toString() !== resourceId
-      );
-      await user.save();
-      return res.status(200).json({
-        success: true,
-        status: 200,
-        message: "Resource unbookmarked successfully",
-      });
-    }
-
-    return res.status(400).json({
-      success: false,
-      status: 400,
-      message: "Resource not bookmarked",
-    });
-  })
-);
-
-
-router.post(
   "/recommendResourcesByContent",
   catchAsync(async (req, res) => {
     const { resourceId } = req.body;
@@ -573,5 +520,101 @@ router.post(
     });
   })
 );
+
+// Bookmark a resource
+router.post(
+  "/bookmarkResource",
+  catchAsync(async (req, res) => {
+    const { userId, resourceId } = req.body;
+
+    // Validate resource existence
+    const resource = await Resources.findById(resourceId);
+    if (!resource) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "Resource not found",
+      });
+    }
+
+    // Update user's favouriteResources
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "User not found",
+      });
+    }
+
+    if (user.favouriteResources.includes(resourceId)) {
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Resource already bookmarked",
+      });
+    }
+
+    user.favouriteResources.push(resourceId);
+    await user.save();
+
+    return res.json({
+      success: true,
+      status: 200,
+      message: "Resource bookmarked successfully",
+      data: user.favouriteResources,
+    });
+  })
+);
+
+// Unbookmark a resource
+router.post(
+  "/unbookmarkResource",
+  catchAsync(async (req, res) => {
+    const { userId, resourceId } = req.body;
+
+    // Validate resource existence
+    const resource = await Resources.findById(resourceId);
+    if (!resource) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "Resource not found",
+      });
+    }
+
+    // Update user's favouriteResources
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "User not found",
+      });
+    }
+
+    if (!user.favouriteResources.includes(resourceId)) {
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Resource not bookmarked",
+      });
+    }
+
+    user.favouriteResources = user.favouriteResources.filter(
+      (favResourceId) => favResourceId.toString() !== resourceId.toString()
+    );
+    await user.save();
+
+    return res.json({
+      success: true,
+      status: 200,
+      message: "Resource unbookmarked successfully",
+      data: user.favouriteResources,
+    });
+  })
+);
+
+module.exports = router;
 
 module.exports = router;

@@ -9,11 +9,15 @@ const Resources = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
+  const [favouriteResources, setFavouriteResources] = useState([]);
   const itemsPerPage = 3;
 
+  // Mock userId, replace with actual logic (e.g., from context or session storage)
+  const userId = "logged-in-user-id";
+
+  // Fetch all resources
   useEffect(() => {
-    const fetchRes = async () => {
+    const fetchResources = async () => {
       try {
         const response = await axios.post("/resource/api/v1/getResources");
         setResources(response.data.data); // Store all resources in state
@@ -24,50 +28,58 @@ const Resources = () => {
       }
     };
 
-    fetchRes();
+    fetchResources();
   }, []);
 
-  const toggleBookmark = async (bookId) => {
-    try {
-      // If the book is already bookmarked, unbookmark it
-      if (bookmarkedBooks.includes(bookId)) {
-        const response = await axios.post("/resource/api/v1/bookmarkResource", {
-          resourceId : bookId,
+  // Fetch user's favourite resources
+  useEffect(() => {
+    const fetchFavouriteResources = async () => {
+      try {
+        const response = await axios.get("/users/api/v1/getFavouriteResources", {
+          params: { userId }, // Send userId as a query param or include in headers
         });
         if (response.data.success) {
-          setBookmarkedBooks(
-            bookmarkedBooks.filter((id) => id !== bookId)
+          setFavouriteResources(
+            response.data.data.map((resource) => resource._id)
           );
         }
-      } else {
-        // Bookmark the book if not already bookmarked
-        const response = await axios.post("/resource/api/v1/bookmarkResource", {
-          resourceId : bookId,
-        });
-        if (response.data.success) {
-          setBookmarkedBooks([...bookmarkedBooks, bookId]);
-        }
-      }
-    } catch (error) {
-      console.error("Error bookmarking/unbookmarking book:", error);
-    }
-  };
-
-  useEffect(() => {
-    // Fetch bookmarked books
-    const fetchBookmarkedBooks = async () => {
-      try {
-        const response = await axios.get("/users/api/v1/getBookmarkedBooks");
-        if (response.data.success) {
-          setBookmarkedBooks(response.data.data.map((book) => book._id));
-        }
       } catch (error) {
-        console.error("Error fetching bookmarked books:", error);
+        console.error("Error fetching favourite resources:", error);
       }
     };
 
-    fetchBookmarkedBooks();
-  }, []);
+    fetchFavouriteResources();
+  }, [userId]);
+
+  // Toggle favourite resource
+  const toggleFavourite = async (resourceId) => {
+    try {
+      if (favouriteResources.includes(resourceId)) {
+        // Unfavourite the resource
+        const response = await axios.post(
+          "/users/api/v1/unfavouriteResource",
+          {
+            userId, // Send userId in request
+            resourceId,
+          }
+        );
+        if (response.data.success) {
+          setFavouriteResources(favouriteResources.filter((id) => id !== resourceId));
+        }
+      } else {
+        // Favourite the resource
+        const response = await axios.post("/users/api/v1/favouriteResource", {
+          userId, // Send userId in request
+          resourceId,
+        });
+        if (response.data.success) {
+          setFavouriteResources([...favouriteResources, resourceId]);
+        }
+      }
+    } catch (error) {
+      console.error("Error favouriting/unfavouriting resource:", error);
+    }
+  };
 
   const handlePageClick = (event) => {
     setCurrentPage(event.selected); // Set the selected page when the user clicks a page button
@@ -94,34 +106,36 @@ const Resources = () => {
         <p>Error: {error}</p>
       ) : (
         <div className={style.galleryContainer}>
-          {currentItems.map((book, index) => (
+          {currentItems.map((resource, index) => (
             <div key={index} className={style.bookContainer}>
               <div className={style.row}>
                 <div
                   className={style.booki}
-                  style={{ "--book-image": `url(${book.imgs})` }}
+                  style={{ "--book-image": `url(${resource.imgs})` }}
                 >
                   <img
-                    src={book.thumbnail}
-                    alt={`Book ${index + 1}`}
+                    src={resource.thumbnail}
+                    alt={`Resource ${index + 1}`}
                     className={style.bookiImg}
                   />
                   <div className={style.content}>
-                    <h3>{book.title}</h3>
+                    <h3>{resource.title}</h3>
                   </div>
                 </div>
               </div>
               <button
                 className={style.btn}
-                onClick={() => toggleBookmark(book._id)}
+                onClick={() => toggleFavourite(resource._id)}
               >
-                {bookmarkedBooks.includes(book._id) ? (
+                {favouriteResources.includes(resource._id) ? (
                   <IoBookmark size={20} />
                 ) : (
                   <IoBookmarkOutline size={20} />
                 )}
                 <span>
-                  {bookmarkedBooks.includes(book._id) ? "Unbookmark" : "Bookmark"}
+                  {favouriteResources.includes(resource._id)
+                    ? "Unfavourite"
+                    : "Favourite"}
                 </span>
               </button>
             </div>
