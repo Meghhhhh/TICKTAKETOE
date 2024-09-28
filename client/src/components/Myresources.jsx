@@ -6,6 +6,7 @@ import Loader from "./Loader"
 const Myresources = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingResourceId,setDeletingResourceId]=useState("");
 
 
   useEffect(() => {
