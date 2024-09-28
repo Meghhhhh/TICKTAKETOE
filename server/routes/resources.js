@@ -433,40 +433,54 @@ router.post(
   "/bookmarkResource",
   isLoggedIn,
   catchAsync(async (req, res) => {
-    const { resourceId } = req.body;
-    const userId = req.user._id;
+    const { resourceId } = req.body; // Take resourceId from req.body
+    const user = await User.findById(req.user.user._id);
 
-    const resource = await Resources.findById(resourceId);
-    if (!resource) {
-      return res.json({
-        success: false,
-        status: 404,
-        message: "Resource not found",
+    if (!user.favouriteResources.includes(resourceId)) {
+      user.favouriteResources.push(resourceId);
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Resource bookmarked successfully",
       });
     }
 
-    const isBookmarked = resource.bookmarkedBy.includes(userId);
-    if (isBookmarked) {
-      // Remove bookmark
-      resource.bookmarkedBy = resource.bookmarkedBy.filter(
-        (id) => id.toString() !== userId.toString()
-      );
-    } else {
-      // Add bookmark
-      resource.bookmarkedBy.push(userId);
-    }
-
-    await resource.save();
-    res.json({
-      success: true,
-      status: 200,
-      message: `Resource ${
-        isBookmarked ? "removed from bookmarks" : "bookmarked"
-      } successfully`,
-      data: resource,
+    return res.status(400).json({
+      success: false,
+      status: 400,
+      message: "Resource already bookmarked",
     });
   })
 );
+
+router.post(
+  "/unbookmarkResource",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const { resourceId } = req.body; // Take resourceId from req.body
+    const user = await User.findById(req.user.user._id);
+
+    if (user.favouriteResources.includes(resourceId)) {
+      user.favouriteResources = user.favouriteResources.filter(
+        (id) => id.toString() !== resourceId
+      );
+      await user.save();
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Resource unbookmarked successfully",
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      status: 400,
+      message: "Resource not bookmarked",
+    });
+  })
+);
+
 
 router.post(
   "/recommendResourcesByContent",
