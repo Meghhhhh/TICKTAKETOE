@@ -4,18 +4,38 @@ import ReactPaginate from "react-paginate";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import style from "../module/resources.module.css";
 
-const Resources = ({ favouriteResources, toggleFavourite }) => {
-  const [resources, setResources] = useState([]);
+const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
+  const [recommendedResources, setRecommendedResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 3;
 
+  const userId = "logged-in-user-id"; // Replace with actual logic
+  const resourceId = "some-resource-id"; // Replace with the current resource ID if needed
+
   useEffect(() => {
-    const fetchResources = async () => {
+    const fetchRecommendedResources = async () => {
       try {
-        const response = await axios.post("/resource/api/v1/getResources");
-        setResources(response.data.data); // Store all resources in state
+        const [contentResponse, collaborativeResponse] = await Promise.all([
+          axios.post("/resource/api/v1/recommendResourcesByContent", {
+            resourceId,
+          }),
+          axios.post(
+            "/resource/api/v1/recommendResourcesByCollaborativeFiltering",
+            {
+              userId,
+            }
+          ),
+        ]);
+
+        const contentData = contentResponse.data.data || [];
+        const collaborativeData = collaborativeResponse.data.data || [];
+        const combinedData = [
+          ...new Set([...contentData, ...collaborativeData]),
+        ];
+
+        setRecommendedResources(combinedData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -23,24 +43,27 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
       }
     };
 
-    fetchResources();
-  }, []);
+    fetchRecommendedResources();
+  }, [userId, resourceId]);
 
   const handlePageClick = (event) => {
-    setCurrentPage(event.selected); // Set the selected page when the user clicks a page button
+    setCurrentPage(event.selected);
   };
 
   const offset = currentPage * itemsPerPage;
-  const currentItems = resources.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(resources.length / itemsPerPage);
+  const currentItems = recommendedResources.slice(
+    offset,
+    offset + itemsPerPage
+  );
+  const pageCount = Math.ceil(recommendedResources.length / itemsPerPage);
 
   return (
     <div>
       <h2
         className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`}
-        id="section-title1"
+        id="section-title2"
       >
-        Resources
+        Recommended Resources
         <span className={style.span} />
       </h2>
 
@@ -111,4 +134,4 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   );
 };
 
-export default Resources;
+export default RecommendedResources;
