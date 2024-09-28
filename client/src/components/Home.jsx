@@ -4,6 +4,7 @@ import image from "../assets/logo-pink.png";
 import Genres from "./Genres";
 import Recommended from "./Recommended";
 import Footer from "./Footer";
+import Resources from "./Resources";
 const Home = () => {
   return (
     <div>
@@ -19,7 +20,8 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Genres />
+      {/* <Genres /> */}
+      <Resources />
       <Recommended />
       <Footer />
     </div>
