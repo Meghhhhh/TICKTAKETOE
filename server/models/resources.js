@@ -13,7 +13,7 @@ const Resources = mongoose.model(
     },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     description: { type: String },
-    tags: [{ type: String }], // Optional: Add tags for content-based recommendations
+    tags: [{ type: String }], 
     ratings: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
