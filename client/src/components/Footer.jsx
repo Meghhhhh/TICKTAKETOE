@@ -75,6 +75,17 @@ const Footer = () => {
               Books
             </NavLink>
           </li>
+          <li>
+            {" "}
+            <NavLink
+              to="/feedback"
+              className={({ isActive }) =>
+                isActive ? style.activeLink : style.nonactiveLink
+              }
+            >
+              Feedback
+            </NavLink>
+          </li>
         </ul>
       </div>
       <div className={`${style.divider}`}></div>
