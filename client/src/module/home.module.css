@@ -1,73 +1,96 @@
-.outerConatiner{
-    font-family: var(--body);
-    width:100vw;
-    height: 100vh;
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    overflow-x: hidden;
-    z-index:3;
-    position: relative;
+.outerConatiner {
+  font-family: var(--body);
+  max-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  z-index: 3;
+  position: relative;
 }
-.secondMain{
-    height: 80%;
-    width: 80%;
-    display: flex;
-    align-items: center;
-}
-.textOuter{
-    width: 50%;
-    height: 100%;
- display: flex;
- flex-direction: column;
-justify-content: center;
-}
-.hf{
-    font-size: 90px;
-    letter-spacing: 2px;
-    font-weight: 900;
-    font-stretch:wider ;
- color:var(--text-color) ;
-}
-.hs{
-    font-size: 40px;
-    color:#F1EBF2 ;
-}
-.ht{
-    font-size: 35px;
-    color:#F1EBF2 ;
-}
-.imageOuter{
-    width: 50%;
-    height: auto;
-    padding: 50px;
 
+.secondMain {
+  height: 80%;
+  width: 80%;
+  display: flex;
+  align-items: center;
 }
-.firstImg{
-    width: 100%;
-    height: 100%;
-        border-radius: 50%;
-        
+
+.textOuter {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.gridBack{
-    width: 80%;
-    height: 80%;
-    background-image: 
-    linear-gradient(to right, #cccccc2a 1px, transparent 1px),
+
+.hf {
+  font-size: clamp(
+    40px,
+    8vw,
+    90px
+  ); /* Adjusts between 40px and 90px based on screen width */
+  letter-spacing: 2px;
+  font-weight: 900;
+  font-stretch: wider;
+  color: var(--text-color);
+}
+
+.hs {
+  font-size: clamp(20px, 5vw, 40px); /* Adjusts between 20px and 40px */
+  color: #f1ebf2;
+}
+
+.ht {
+  font-size: clamp(18px, 4vw, 35px); /* Adjusts between 18px and 35px */
+  color: #f1ebf2;
+}
+
+.imageOuter {
+  width: 50%;
+  height: auto;
+  /* padding: 50px; */
+}
+
+.firstImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.gridBack {
+  width: 80%;
+  height: 80%;
+  background-image: linear-gradient(to right, #cccccc2a 1px, transparent 1px),
     linear-gradient(to bottom, #cccccc4f 1px, transparent 1px);
   background-size: 20px 20px;
-
-}
-.btn{
-    background-color: var(--button-bg);
 }
 
+.btn {
+  background-color: var(--button-bg);
+}
+
+/* Mobile adjustments */
 @media (max-width: 450px) {
-    .imageOuter{
-        visibility: hidden;
-    }
-    .outerConatiner{
-        margin-left: 20%;
-    }
+  .secondMain {
+    display: flex;
+    flex-direction: column-reverse;
   }
-  
+  .textOuter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+  }
+
+  /* Further reduce font sizes for very small screens */
+  .hf {
+    font-size: clamp(30px, 8vw, 70px);
+  }
+
+  .hs,
+  .ht {
+    font-size: clamp(16px, 5vw, 30px);
+  }
+}

@@ -9,7 +9,7 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
 
   const userId = localStorage.getItem("userId") || "default-user-id";
   const resourceId = "some-resource-id"; // Replace with the current resource ID if needed

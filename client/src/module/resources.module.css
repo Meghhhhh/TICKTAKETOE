@@ -64,7 +64,7 @@
   background-color: var(--bg-glass);
   padding: 20px;
   border-radius: 10px;
-  width: 100vw;
+  width: 80vw;
   display: grid;
   margin:20px  auto;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
