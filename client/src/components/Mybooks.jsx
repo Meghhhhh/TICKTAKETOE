@@ -15,11 +15,8 @@ const Mybooks = () => {
           withCredentials: true,
         });
         if (response.data.success) {
-          console.log(response.data.data);
-          
           setBookHistory(response.data.data);
         }
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching book history:", error);
       }
@@ -31,14 +28,22 @@ const Mybooks = () => {
   return (
     <div className={style.body}>
       <div className={style.listContainer}>
-        {bookHistory && bookHistory.map((item, index) => (
-          <div key={index} className={style.element}>
-            <div className={style.set}>
-              <img src={item.thumbnail} className={style.imgs} alt="PDF Icon" />
-              <div className={style.texts}>{item.title}</div>
+        {bookHistory.length > 0 ? (
+          bookHistory.map((item, index) => (
+            <div key={index} className={style.element}>
+              <div className={style.set}>
+                <img
+                  src={item.thumbnail}
+                  className={style.imgs}
+                  alt="PDF Icon"
+                />
+                <div className={style.texts}>{item.title}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className={style.noBooksMessage}>No books available</p>
+        )}
       </div>
     </div>
   );
