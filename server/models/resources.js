@@ -19,15 +19,26 @@ const Resources = mongoose.model(
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         rating: { type: Number, min: 1, max: 5 },
       },
-    ],
+
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      description: { type: String },
+      thumbnail: { type: String },
+      thumbnailName: { type: String },
+       createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+   
+    // { timestamps: true }
+  
+
+  
     bookmarkedBy: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User" }
     ],
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+   
   })
+
 );
 
 module.exports = Resources;

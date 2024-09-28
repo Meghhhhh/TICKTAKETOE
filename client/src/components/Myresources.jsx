@@ -5,12 +5,14 @@ import styles from "../module/myresources.module.css";
 const Myresources = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userId = "66f70a4d80b3ff3d764b9f02";
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await axios.post("resource/api/v1/getResources", { userId });
+        const response = await axios.post("resource/api/v1/getResources", {
+          userId,
+        });
         setResources(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -19,7 +21,23 @@ const Myresources = () => {
       }
     };
     fetchResources();
-  }, []);
+  }, [userId]);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete("resource/api/v1/deleteResource", {
+        data: { id },
+      });
+      if (response.data.success) {
+        // Filter out the deleted resource from the state
+        setResources(resources.filter((resource) => resource._id !== id));
+      } else {
+        console.error("Failed to delete resource:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting resource:", error);
+    }
+  };
 
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
@@ -42,6 +60,12 @@ const Myresources = () => {
               View Resource
             </a>
           )}
+          <button
+            className={styles.deleteButton}
+            onClick={() => handleDelete(resource._id)}
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>

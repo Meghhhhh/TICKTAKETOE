@@ -24,6 +24,7 @@ const TopBar = () => {
       .then((response) => {
         if (response.data.status === 200) {
           setIsLoggedIn(true);
+          localStorage.setItem("userId", response.data.data._id);
           setIsProfile(response.data.data.profilePicture);
         }
         // console.log(response);
