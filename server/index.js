@@ -18,6 +18,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const payment = require("./routes/payment.js");
 const books = require("./routes/books.js");
+const feedback = require("./routes/feedback.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,6 +44,7 @@ app.use("/payment/api/v1", payment);
 app.use("/books/api/v1", books);
 app.use("/lending/api/v1", lending);
 app.use("/resource/api/v1", resource);
+app.use("/feedback/api/v1", feedback);
 app.use(error);
 
 cron.schedule('0 0 * * *', async () => { 

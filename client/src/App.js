@@ -18,6 +18,7 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import Myresources from "./components/Myresources";
 import Addresources from "./components/Addresources";
 import Bookmarks from "./components/Bookmarks";
+import Feedback from "./components/Feedback";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="/books" element={<Books />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/history" element={<Mybooks />} />
+            <Route path="/feedback" element={<Feedback />} />
             <Route path="/libadmin" element={<Libadmin />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/*" element={<Admin />} />

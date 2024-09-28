@@ -32,7 +32,7 @@ router.post(
     const { id, userId } = req.body;
 
     if (id) {
-      const resource = await Resources.findById(id);
+      const resource = await Resources.findById(id).populate('userId');
       if (!resource)
         return res.json({
           success: false,
@@ -48,9 +48,9 @@ router.post(
         data: resource,
       });
     } else if (userId) {
-      const resources = await Resources.find({ userId }).sort({
-        createdAt: -1,
-      });
+      const resources = await Resources.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate('userId');
       return res.json({
         success: true,
         status: 200,
@@ -58,7 +58,9 @@ router.post(
         data: resources,
       });
     } else {
-      const resources = await Resources.find().sort({ createdAt: -1 });
+      const resources = await Resources.find()
+        .sort({ createdAt: -1 })
+        .populate('userId');
       return res.json({
         success: true,
         status: 200,
@@ -68,6 +70,7 @@ router.post(
     }
   })
 );
+
 
 router.get(
   "/searchResources",
