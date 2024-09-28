@@ -382,4 +382,182 @@ router.delete(
   })
 );
 
+router.post(
+  "/rateResource",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const { resourceId, rating } = req.body;
+    const userId = req.user._id;
+
+    if (rating < 1 || rating > 5) {
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Rating must be between 1 and 5",
+      });
+    }
+
+    const resource = await Resources.findById(resourceId);
+    if (!resource) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "Resource not found",
+      });
+    }
+
+    // Check if the user has already rated
+    const existingRatingIndex = resource.ratings.findIndex(
+      (r) => r.userId.toString() === userId.toString()
+    );
+
+    if (existingRatingIndex !== -1) {
+      // Update existing rating
+      resource.ratings[existingRatingIndex].rating = rating;
+    } else {
+      // Add new rating
+      resource.ratings.push({ userId, rating });
+    }
+
+    await resource.save();
+    res.json({
+      success: true,
+      status: 200,
+      message: "Resource rated successfully",
+      data: resource,
+    });
+  })
+);
+
+router.post(
+  "/bookmarkResource",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const { resourceId } = req.body;
+    const userId = req.user._id;
+
+    const resource = await Resources.findById(resourceId);
+    if (!resource) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "Resource not found",
+      });
+    }
+
+    const isBookmarked = resource.bookmarkedBy.includes(userId);
+    if (isBookmarked) {
+      // Remove bookmark
+      resource.bookmarkedBy = resource.bookmarkedBy.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+    } else {
+      // Add bookmark
+      resource.bookmarkedBy.push(userId);
+    }
+
+    await resource.save();
+    res.json({
+      success: true,
+      status: 200,
+      message: `Resource ${
+        isBookmarked ? "removed from bookmarks" : "bookmarked"
+      } successfully`,
+      data: resource,
+    });
+  })
+);
+
+router.post(
+  "/recommendResourcesByContent",
+  catchAsync(async (req, res) => {
+    const { resourceId } = req.body;
+
+    const resource = await Resources.findById(resourceId);
+    if (!resource) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "Resource not found",
+      });
+    }
+
+    // Find similar resources by category and tags
+    const recommendedResources = await Resources.find({
+      _id: { $ne: resourceId }, // Exclude the original resource
+      category: resource.category,
+      tags: { $in: resource.tags },
+    }).limit(10); // Limit results for simplicity
+
+    if (recommendedResources.length === 0) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "No similar resources found",
+      });
+    }
+
+    res.json({
+      success: true,
+      status: 200,
+      message: "Similar resources recommended",
+      data: recommendedResources,
+    });
+  })
+);
+
+router.post(
+  "/recommendResourcesByCollaborativeFiltering",
+  isLoggedIn,
+  catchAsync(async (req, res) => {
+    const userId = req.user._id;
+
+    // Get resources rated/bookmarked by the current user
+    const userInteractions = await Resources.find({
+      $or: [{ ratings: { $elemMatch: { userId } } }, { bookmarkedBy: userId }],
+    });
+
+    if (userInteractions.length === 0) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "No interactions found for this user",
+      });
+    }
+
+    // Extract categories and tags of interacted resources
+    const categories = userInteractions.map((r) => r.category);
+    const tags = userInteractions.flatMap((r) => r.tags);
+
+    // Find resources rated/bookmarked by other users with similar interactions
+    const recommendedResources = await Resources.find({
+      $and: [
+        { _id: { $nin: userInteractions.map((r) => r._id) } }, // Exclude already interacted resources
+        {
+          $or: [
+            { category: { $in: categories } },
+            { tags: { $in: tags } },
+            { ratings: { $elemMatch: { userId: { $ne: userId } } } },
+          ],
+        },
+      ],
+    }).limit(10);
+
+    if (recommendedResources.length === 0) {
+      return res.json({
+        success: false,
+        status: 404,
+        message: "No recommendations available",
+      });
+    }
+
+    res.json({
+      success: true,
+      status: 200,
+      message: "Resources recommended successfully",
+      data: recommendedResources,
+    });
+  })
+);
+
 module.exports = router;
