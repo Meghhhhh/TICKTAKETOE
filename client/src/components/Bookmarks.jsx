@@ -47,11 +47,10 @@ const Bookmarks = () => {
           bookId,
         });
         if (response.data.success) {
-          const bookmarkedBook = await axios.get(`/books/api/v1/getBook/${bookId}`);
-          setBookmarkedBooks((prev) => [
-            ...prev,
-            bookmarkedBook.data.data,
-          ]);
+          const bookmarkedBook = await axios.get(
+            `/books/api/v1/getBook/${bookId}`
+          );
+          setBookmarkedBooks((prev) => [...prev, bookmarkedBook.data.data]);
         }
       }
     } catch (err) {
@@ -97,6 +96,8 @@ const Bookmarks = () => {
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error}</p>
+      ) : bookmarkedBooks.length === 0 ? (
+        <p>No bookmarked books added yet.</p>
       ) : (
         <div className={style.galleryContainer}>
           {bookmarkedBooks.map((book, index) => (
@@ -144,42 +145,46 @@ const Bookmarks = () => {
         <span className={style.span} />
       </h2>
 
-      <div className={style.galleryContainer}>
-        {favouriteResources.map((resource, index) => (
-          <div key={index} className={style.bookContainer}>
-            <div className={style.row}>
-              <div
-                className={style.booki}
-                style={{ "--book-image": `url(${resource.imgs})` }}
-              >
-                <img
-                  src={resource.thumbnail}
-                  alt={`Resource ${index + 1}`}
-                  className={style.bookiImg}
-                />
-                <div className={style.content}>
-                  <h3>{resource.title}</h3>
+      {favouriteResources.length === 0 ? (
+        <p>No favourite resources added yet.</p>
+      ) : (
+        <div className={style.galleryContainer}>
+          {favouriteResources.map((resource, index) => (
+            <div key={index} className={style.bookContainer}>
+              <div className={style.row}>
+                <div
+                  className={style.booki}
+                  style={{ "--book-image": `url(${resource.imgs})` }}
+                >
+                  <img
+                    src={resource.thumbnail}
+                    alt={`Resource ${index + 1}`}
+                    className={style.bookiImg}
+                  />
+                  <div className={style.content}>
+                    <h3>{resource.title}</h3>
+                  </div>
                 </div>
               </div>
+              <button
+                className={style.btn}
+                onClick={() => handleToggleFavouriteResource(resource._id)}
+              >
+                {favouriteResources.some((res) => res._id === resource._id) ? (
+                  <IoBookmark size={20} />
+                ) : (
+                  <IoBookmarkOutline size={20} />
+                )}
+                <span>
+                  {favouriteResources.some((res) => res._id === resource._id)
+                    ? "Unfavourite"
+                    : "Favourite"}
+                </span>
+              </button>
             </div>
-            <button
-              className={style.btn}
-              onClick={() => handleToggleFavouriteResource(resource._id)}
-            >
-              {favouriteResources.some((res) => res._id === resource._id) ? (
-                <IoBookmark size={20} />
-              ) : (
-                <IoBookmarkOutline size={20} />
-              )}
-              <span>
-                {favouriteResources.some((res) => res._id === resource._id)
-                  ? "Unfavourite"
-                  : "Favourite"}
-              </span>
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

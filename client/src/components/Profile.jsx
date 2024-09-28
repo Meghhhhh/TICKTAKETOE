@@ -266,6 +266,15 @@ const Profile = () => {
           </Link>
         </div>
         <div className={styles.btnContainer}>
+          <Link
+            to="/addresources"
+            className={styles.button}
+            style={{ width: "100%" }}
+          >
+            Add Resource
+          </Link>
+        </div>
+        <div className={styles.btnContainer}>
           <button onClick={handleDelete} className={styles.button}>
             Delete Account
           </button>

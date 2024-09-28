@@ -131,26 +131,29 @@ router.post(
       "other",
       "link",
     ];
-    const schema = Joi.object({
-      title: Joi.string().required(),
-      category: Joi.string()
-        .valid(...categories)
-        .required(),
-      description: Joi.string(),
-      link: Joi.string().optional(),
-      userId: Joi.string(),
-    });
+    // const schema = Joi.object({
+    //   title: Joi.string().required(),
+    //   category: Joi.string()
+    //     .valid(...categories)
+    //     .required(),
+    //   description: Joi.string(),
+    //   link: Joi.string().optional(),
+    //   userId: Joi.string(),
 
-    const { error } = schema.validate(req.body);
-    if (error)
-      return res.json({
-        success: false,
-        status: 400,
-        message: error.details[0].message,
-        data: null,
-      });
+    // });
 
-    const { title, category, description, userId } = req.body;
+    // const { error } = schema.validate(req.body);
+    // if (error)
+      // return res.json({
+      //   success: false,
+      //   status: 401,
+      //   message: error.details[0].message,
+      //   data: null,
+      // });
+
+    const { title, category, description, userId,tags } = req.body;
+
+    
 
     const userExists = await User.findById(userId);
     if (!userExists) {
@@ -169,6 +172,7 @@ router.post(
         category,
         description,
         userId,
+        tags,
       });
       await resource.save();
       return res.json({
@@ -239,6 +243,7 @@ router.post(
         category,
         description,
         userId,
+        tags
       });
       await resource.save();
       return res.json({
@@ -246,9 +251,10 @@ router.post(
         status: 200,
         message: "Resource posted successfully",
         data: resource,
-      });
+      });}
     }
-  })
+    
+  )
 );
 
 router.put(
