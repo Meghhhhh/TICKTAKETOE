@@ -11,7 +11,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
   const debounceDelay = 1000;
   useEffect(() => {
     const fetchResources = async () => {
@@ -125,7 +125,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
                   />
                   <div className={style.content}>
                     <h3>{resource.title}</h3>
-                    <h3>{resource.userId.name}</h3>
+                    <h3>{resource.userId?.name}</h3>
                   </div>
                 </div>
               </div>
