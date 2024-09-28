@@ -152,6 +152,62 @@ router.post(
 );
 
 router.post(
+  "/favouriteResource",
+  catchAsync(async (req, res) => {
+    const user = await User.findById(req.user.user._id);
+    if (!user)
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Invalid user ID",
+        data: null,
+      });
+
+    if (user.favouriteResources.includes(req.body.resourceId))
+      return res.json({
+        success: false,
+        status: 400,
+        message: "User has already the resource favourited",
+        data: null,
+      });
+
+    user.favouriteResources.push(req.body.resourceId);
+    await user.save();
+
+    res.json({
+      success: true,
+      status: 200,
+      message: "Resource added to user favourites successfully",
+      data: null,
+    });
+  })
+);
+
+router.post(
+  "/unfavouriteResource",
+  catchAsync(async (req, res) => {
+    const user = await User.findById(req.user.user._id);
+    if (!user)
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Invalid user ID",
+        data: null,
+      });
+
+    user.favouriteResources.pull(req.body.resourceId);
+    await user.save();
+
+    res.json({
+      success: true,
+      status: 200,
+      message: "Resource removed from favourites successfully",
+      data: null,
+    });
+  })
+);
+
+router.post(
   "/createLibrarian",
   [isLoggedIn, isAdmin],
   catchAsync(async (req, res) => {
