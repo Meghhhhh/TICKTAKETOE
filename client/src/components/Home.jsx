@@ -5,8 +5,10 @@ import image from "../assets/logo-pink.png";
 import Resources from "./Resources";
 import RecommendedResources from "./RecommendedResources";
 import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+
   const [favouriteResources, setFavouriteResources] = useState([]);
   const [userId, setUserId] = useState("logged-in-user-id"); // Replace with actual userId logic
 
@@ -31,6 +33,7 @@ const Home = () => {
   }, [userId,favouriteResources]);
 
   // Toggle favourite resource
+  const navigate = useNavigate();
   const toggleFavourite = async (resourceId) => {
     try {
       if (favouriteResources.includes(resourceId)) {

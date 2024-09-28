@@ -27,6 +27,7 @@ background-image: var(--background-image);
   font-weight: 400;
   color: var(--text-color);
   padding: 2.5rem;
+  margin: 100px auto;
 }
 
 .formGroup {

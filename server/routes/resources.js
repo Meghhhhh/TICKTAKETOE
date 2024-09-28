@@ -70,7 +70,30 @@ router.post(
     }
   })
 );
+router.post(
+  "/getMyResources",
+  catchAsync(async (req, res) => {
+    const userId = req.user.user._id;
 
+    if (!userId) {
+      return res.json({
+        success: false,
+        status: 400,
+        message: "Login first",
+        data: null,
+      });
+    }
+    const resources = await Resources.find({ userId })
+      .sort({ createdAt: -1 })
+      .populate("userId");
+    return res.json({
+      success: true,
+      status: 200,
+      message: "Resources retrieved successfully",
+      data: resources,
+    });
+  })
+);
 
 router.post(
   "/searchResources",

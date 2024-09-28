@@ -78,9 +78,13 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   }, [searchQuery]);
 
   const offset = currentPage * itemsPerPage;
-  const currentItems = resources.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(resources.length / itemsPerPage);
-
+  if (resources) {
+    var currentItems = resources?.slice(offset, offset + itemsPerPage);
+    var pageCount = Math.ceil(resources?.length / itemsPerPage);
+  } else {
+     var currentItems = 0;
+    var pageCount = 0;
+  }
   return (
     <div>
       <h2
@@ -107,7 +111,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
         <p>Error: {error}</p>
       ) : (
         <div className={style.galleryContainer}>
-          {currentItems.map((resource, index) => (
+          {currentItems?.map((resource, index) => (
             <div
               key={index}
               className={style.bookContainer}

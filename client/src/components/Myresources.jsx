@@ -5,14 +5,11 @@ import styles from "../module/myresources.module.css";
 const Myresources = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await axios.post("resource/api/v1/getResources", {
-          userId,
-        });
+        const response = await axios.post("resource/api/v1/getMyResources" );
         setResources(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -21,7 +18,7 @@ const Myresources = () => {
       }
     };
     fetchResources();
-  }, [userId]);
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -44,10 +41,10 @@ const Myresources = () => {
 
   return (
     <div className={styles.container}>
-      {resources.length === 0 ? (
+      {resources?.length === 0 ? (
         <div className={styles.noResourcesMessage}>No resources available</div>
       ) : (
-        resources.map((resource) => (
+        resources?.map((resource) => (
           <div key={resource._id} className={styles.card}>
             <h3 className={styles.title}>{resource.title}</h3>
             <p className={styles.description}>{resource.description}</p>

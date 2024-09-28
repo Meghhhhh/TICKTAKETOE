@@ -162,7 +162,13 @@ const AddBooks = ({ setShowNewComponent }) => {
           type="submit"
           value="SAVE"
         >
-          <button>SAVE</button>
+          <button
+            className={styles.button}
+            type="submit"
+            style={{ width: "100%" }}
+          >
+            SAVE
+          </button>
         </div>
       </form>
     </div>
