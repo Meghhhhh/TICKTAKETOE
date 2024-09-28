@@ -4,7 +4,8 @@ import images from "../assets";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { IoBookmark } from "react-icons/io5";
+import { Link } from "react-router-dom";
 const Profile = () => {
   const currentPassword = useRef("");
   const newPassword = useRef("");
@@ -247,7 +248,7 @@ const Profile = () => {
                   onClick={handleClick}
                   className={styles.button}
                   type="submit"
-                  style={{width: '100%'}}
+                  style={{ width: "100%" }}
                 >
                   Save
                 </button>
@@ -255,7 +256,15 @@ const Profile = () => {
             </div>
           </div>
         )}
-
+        <div className={styles.btnContainer}>
+          <Link
+            to="/bookmarks"
+            className={styles.button}
+            style={{ width: "100%" }}
+          >
+            <IoBookmark size={20} style={{ padding: "0 5px" }} /> Bookmarks
+          </Link>
+        </div>
         <div className={styles.btnContainer}>
           <button onClick={handleDelete} className={styles.button}>
             Delete Account
@@ -266,7 +275,7 @@ const Profile = () => {
           </button>
         </div>
       </div>
-      <ToastContainer position="bottom-center"/>
+      <ToastContainer position="bottom-center" />
     </div>
   );
 };

@@ -11,7 +11,7 @@
   width: auto;
   padding: 0.5rem 1rem;
   background-color: var(--primary-color);
-  color: white;
+  color: var(--text-color);
   border: 1px solid var(--primary-color);
   border-radius: 4px;
   cursor: pointer;
@@ -62,11 +62,11 @@
   border-color: var(--secondary-color);
   width: 100%;
   background: transparent;
-  color: white;
+  color: var(--text-color);
   
 }
 .formControl::placeholder {
-  color: white;
+  color: var(--text-color);
   opacity: 1;
 }
 

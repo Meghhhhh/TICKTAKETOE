@@ -84,27 +84,24 @@
   margin-top: 6vh;
   grid-area: title;
 }
-.abt11, 
-.abt21, 
-.abt31, 
+.abt11,
+.abt21,
+.abt31,
 .abt41 {
-  overflow: hidden; 
-  
+  overflow: hidden;
 }
-.abt11{
-grid-area: abt11;
+.abt11 {
+  grid-area: abt11;
 }
 .abt11 img,
-.abt21 img, 
-.abt31 img, 
-.abt41 img
-{
-object-fit: contain;
-left: -60%;
+.abt21 img,
+.abt31 img,
+.abt41 img {
+  object-fit: contain;
+  left: -60%;
   top: -65%;
-scale: .5;
-position: absolute;
-
+  scale: 0.5;
+  position: absolute;
 }
 
 .about_block::before {
@@ -168,7 +165,12 @@ position: absolute;
   position: absolute;
   inset: -0.1rem;
   z-index: 2;
-  background: conic-gradient(#FB6F92 0%, #FFE5EC 40%,#FFE5EC 60%, #FB6F92 100%);
+  background: conic-gradient(
+    #eab308 0%,
+    #eab20887 40%,
+    rgb(179, 166, 67) 87 60%,
+    #eab308 100%
+  );
   border-radius: inherit;
   animation: moving 3s linear infinite;
 
@@ -300,7 +302,7 @@ position: absolute;
     height: fit-content;
     gap: 20px;
     margin-top: 20vh;
-    padding:2rem 0 ;
+    padding: 2rem 0;
   }
   .about_block::before {
     background-image: none;
@@ -391,7 +393,7 @@ position: absolute;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    scroll-snap-align:unset;
+    scroll-snap-align: unset;
     border: 2px solid white;
     height: fit-content;
     margin: 20px;
@@ -427,17 +429,14 @@ position: absolute;
     justify-self: center;
   }
 
-.abt11 img,
-.abt21 img, 
-.abt31 img, 
-.abt41 img
-{
-object-fit: contain;
-left: -140%;
-  top: -230%;
-scale: .6;
-position: absolute;
-
-}
-
+  .abt11 img,
+  .abt21 img,
+  .abt31 img,
+  .abt41 img {
+    object-fit: contain;
+    left: -140%;
+    top: -230%;
+    scale: 0.6;
+    position: absolute;
+  }
 }

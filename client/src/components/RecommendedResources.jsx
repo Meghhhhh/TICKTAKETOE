@@ -11,7 +11,7 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 3;
 
-  const userId = "logged-in-user-id"; // Replace with actual logic
+  const userId = localStorage.getItem("userId") || "default-user-id";
   const resourceId = "some-resource-id"; // Replace with the current resource ID if needed
 
   useEffect(() => {
@@ -74,7 +74,11 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
       ) : (
         <div className={style.galleryContainer}>
           {currentItems.map((resource, index) => (
-            <div key={index} className={style.bookContainer}>
+            <div
+              key={index}
+              className={style.bookContainer}
+              onClick={() => window.open(resource.link, "_blank")} // Open link in a new tab
+            >
               <div className={style.row}>
                 <div
                   className={style.booki}
@@ -92,7 +96,10 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
               </div>
               <button
                 className={style.btn}
-                onClick={() => toggleFavourite(resource._id)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent the parent onClick from firing
+                  toggleFavourite(resource._id);
+                }}
               >
                 {favouriteResources.includes(resource._id) ? (
                   <IoBookmark size={20} />

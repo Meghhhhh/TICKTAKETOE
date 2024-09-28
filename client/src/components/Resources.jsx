@@ -51,7 +51,11 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
       ) : (
         <div className={style.galleryContainer}>
           {currentItems.map((resource, index) => (
-            <div key={index} className={style.bookContainer}>
+            <div
+              key={index}
+              className={style.bookContainer}
+              onClick={() => window.open(resource.link, "_blank")} // Open link in a new tab
+            >
               <div className={style.row}>
                 <div
                   className={style.booki}
@@ -70,7 +74,10 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
               </div>
               <button
                 className={style.btn}
-                onClick={() => toggleFavourite(resource._id)}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent the parent onClick from firing
+                  toggleFavourite(resource._id);
+                }}
               >
                 {favouriteResources.includes(resource._id) ? (
                   <IoBookmark size={20} />

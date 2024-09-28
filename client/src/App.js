@@ -17,6 +17,7 @@ import Libadmin from "./components/Libadmin";
 import PaymentSuccess from "./components/PaymentSuccess";
 import Myresources from "./components/Myresources";
 import Addresources from "./components/Addresources";
+import Bookmarks from "./components/Bookmarks";
 import Feedback from "./components/Feedback";
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/aboutus" element={<About />} />
             <Route path="/books" element={<Books />} />
+            <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/history" element={<Mybooks />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/libadmin" element={<Libadmin />} />
