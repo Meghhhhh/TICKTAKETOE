@@ -14,7 +14,7 @@ import logo from "../assets/logo-pink.png"
 const TopBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isProfile, setIsProfile] = useState(null);
+
   const menuToggleRef = useRef(null);
   const navRef = useRef(null);
 
@@ -25,7 +25,6 @@ const TopBar = () => {
         if (response.data.status === 200) {
           setIsLoggedIn(true);
           localStorage.setItem("userId", response.data.data._id);
-          setIsProfile(response.data.data.profilePicture);
         }
         // console.log(response);
       })
@@ -135,11 +134,9 @@ const TopBar = () => {
 
           {isLoggedIn ? (
             <div onClick={handleProfileClick}>
-              {!isProfile ? (
+             
                 <FaCircleUser className={style.profile} />
-              ) : (
-                <img src={isProfile} className={style.profile}></img>
-              )}
+         
             </div>
           ) : (
             <Link to="/auth/login">
