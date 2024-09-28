@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../module/myresources.module.css";
+import Loader from "./Loader"
 
 const Myresources = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingResourceId, setDeletingResourceId] = useState(null); // To track the resource being deleted
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -24,6 +26,7 @@ const Myresources = () => {
   }, [userId]);
 
   const handleDelete = async (id) => {
+    setDeletingResourceId(id); // Set the resource ID that is being deleted
     try {
       const response = await axios.delete("resource/api/v1/deleteResource", {
         data: { id },
@@ -35,11 +38,13 @@ const Myresources = () => {
       }
     } catch (error) {
       console.error("Error deleting resource:", error);
+    } finally {
+      setDeletingResourceId(null); // Reset after deletion is complete
     }
   };
 
   if (loading) {
-    return <div className={styles.loading}>Loading...</div>;
+    return <div className={styles.loading}><Loader/></div>;
   }
 
   return (
@@ -62,12 +67,17 @@ const Myresources = () => {
                 View Resource
               </a>
             )}
-            <button
-              className={styles.deleteButton}
-              onClick={() => handleDelete(resource._id)}
-            >
-              Delete
-            </button>
+
+            {deletingResourceId === resource._id ? (
+              <div className={styles.deletingLoader}><Loader/></div> // Show loader while deleting
+            ) : (
+              <button
+                className={styles.deleteButton}
+                onClick={() => handleDelete(resource._id)}
+              >
+                Delete
+              </button>
+            )}
           </div>
         ))
       )}
