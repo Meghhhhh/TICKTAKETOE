@@ -153,7 +153,7 @@ const Profile = () => {
           <div className={styles.avatarPreview}>
             <div id="imagePreview">
               <img
-                src={userDetails.profilePicture || images.profile}
+                src={ images.profile}
                 className={`${styles.photo}`}
                 alt=""
               />
