@@ -6,27 +6,41 @@ import style from "../module/resources.module.css";
 const Bookmarks = () => {
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [favouriteResources, setFavouriteResources] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loadingBookmarks, setLoadingBookmarks] = useState(true);
+  const [loadingFavourites, setLoadingFavourites] = useState(true);
+  const [errorBookmarks, setErrorBookmarks] = useState(null);
+  const [errorFavourites, setErrorFavourites] = useState(null);
 
+  // Fetch Bookmarked Books
   useEffect(() => {
-    const fetchBookmarks = async () => {
+    const fetchBookmarkedBooks = async () => {
       try {
-        const [booksResponse, resourcesResponse] = await Promise.all([
-          axios.get("/users/api/v1/getBookmarkedBooks"),
-          axios.get("/users/api/v1/getFavouriteResources"),
-        ]);
-
+        const booksResponse = await axios.get("/users/api/v1/getBookmarkedBooks");
         setBookmarkedBooks(booksResponse.data.data || []);
-        setFavouriteResources(resourcesResponse.data.data || []);
       } catch (err) {
-        setError(err.message);
+        setErrorBookmarks(err.message);
       } finally {
-        setLoading(false);
+        setLoadingBookmarks(false);
       }
     };
 
-    fetchBookmarks();
+    fetchBookmarkedBooks();
+  }, []);
+
+  // Fetch Favourite Resources
+  useEffect(() => {
+    const fetchFavouriteResources = async () => {
+      try {
+        const resourcesResponse = await axios.get("/users/api/v1/getFavouriteResources");
+        setFavouriteResources(resourcesResponse.data.data || []);
+      } catch (err) {
+        setErrorFavourites(err.message);
+      } finally {
+        setLoadingFavourites(false);
+      }
+    };
+
+    fetchFavouriteResources();
   }, []);
 
   const toggleBookmark = async (bookId) => {
@@ -54,7 +68,7 @@ const Bookmarks = () => {
         }
       }
     } catch (err) {
-      setError(err.message);
+      setErrorBookmarks(err.message);
     }
   };
 
@@ -74,11 +88,10 @@ const Bookmarks = () => {
       } else {
         // Favourite the resource
         await axios.post("/users/api/v1/favouriteResource", { resourceId });
-        // Optionally, you can fetch the newly favourited resource details
-        // and add it to the favouriteResources state
+        // Optionally, fetch the newly favourited resource details
       }
     } catch (err) {
-      setError(err.message);
+      setErrorFavourites(err.message);
     }
   };
 
@@ -92,10 +105,10 @@ const Bookmarks = () => {
         <span className={style.span} />
       </h2>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
+      {loadingBookmarks ? (
+        <p>Loading bookmarks...</p>
+      ) : errorBookmarks ? (
+        <p>Error: {errorBookmarks}</p>
       ) : bookmarkedBooks.length === 0 ? (
         <p>No bookmarked books added yet.</p>
       ) : (
@@ -145,7 +158,11 @@ const Bookmarks = () => {
         <span className={style.span} />
       </h2>
 
-      {favouriteResources.length === 0 ? (
+      {loadingFavourites ? (
+        <p>Loading favourite resources...</p>
+      ) : errorFavourites ? (
+        <p>Error: {errorFavourites}</p>
+      ) : favouriteResources.length === 0 ? (
         <p>No favourite resources added yet.</p>
       ) : (
         <div className={style.galleryContainer}>
