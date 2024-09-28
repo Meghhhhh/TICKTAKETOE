@@ -4,38 +4,38 @@ import ReactPaginate from "react-paginate";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import style from "../module/resources.module.css";
 
-const RecommendedResources = () => {
+const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
   const [recommendedResources, setRecommendedResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [favouriteResources, setFavouriteResources] = useState([]);
   const itemsPerPage = 3;
 
-  // Mock userId, replace with actual logic (e.g., from context or session storage)
-  const userId = "logged-in-user-id";
+  const userId = "logged-in-user-id"; // Replace with actual logic
   const resourceId = "some-resource-id"; // Replace with the current resource ID if needed
 
-  // Fetch recommended resources
   useEffect(() => {
     const fetchRecommendedResources = async () => {
       try {
-        // Call both APIs concurrently
         const [contentResponse, collaborativeResponse] = await Promise.all([
           axios.post("/resource/api/v1/recommendResourcesByContent", {
             resourceId,
           }),
-          axios.post("/resource/api/v1/recommendResourcesByCollaborativeFiltering", {
-            userId,
-          }),
+          axios.post(
+            "/resource/api/v1/recommendResourcesByCollaborativeFiltering",
+            {
+              userId,
+            }
+          ),
         ]);
 
-        // Combine data from both APIs
         const contentData = contentResponse.data.data || [];
         const collaborativeData = collaborativeResponse.data.data || [];
-        const combinedData = [...new Set([...contentData, ...collaborativeData])]; // Remove duplicates
+        const combinedData = [
+          ...new Set([...contentData, ...collaborativeData]),
+        ];
 
-        setRecommendedResources(combinedData); // Store all recommended resources in state
+        setRecommendedResources(combinedData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -46,63 +46,10 @@ const RecommendedResources = () => {
     fetchRecommendedResources();
   }, [userId, resourceId]);
 
-  // Fetch user's favourite resources
-  useEffect(() => {
-    const fetchFavouriteResources = async () => {
-      try {
-        const response = await axios.get(
-          "/users/api/v1/getFavouriteResources",
-          {
-            params: { userId }, // Send userId as a query param or include in headers
-          }
-        );
-        if (response.data.success) {
-          setFavouriteResources(
-            response.data.data.map((resource) => resource._id)
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching favourite resources:", error);
-      }
-    };
-
-    fetchFavouriteResources();
-  }, [userId]);
-
-  // Toggle favourite resource
-  const toggleFavourite = async (resourceId) => {
-    try {
-      if (favouriteResources.includes(resourceId)) {
-        // Unfavourite the resource
-        const response = await axios.post("/users/api/v1/unfavouriteResource", {
-          userId, // Send userId in request
-          resourceId,
-        });
-        if (response.data.success) {
-          setFavouriteResources(
-            favouriteResources.filter((id) => id !== resourceId)
-          );
-        }
-      } else {
-        // Favourite the resource
-        const response = await axios.post("/users/api/v1/favouriteResource", {
-          userId, // Send userId in request
-          resourceId,
-        });
-        if (response.data.success) {
-          setFavouriteResources([...favouriteResources, resourceId]);
-        }
-      }
-    } catch (error) {
-      console.error("Error favouriting/unfavouriting resource:", error);
-    }
-  };
-
   const handlePageClick = (event) => {
-    setCurrentPage(event.selected); // Set the selected page when the user clicks a page button
+    setCurrentPage(event.selected);
   };
 
-  // Calculate the starting and ending index for the items to display on the current page
   const offset = currentPage * itemsPerPage;
   const currentItems = recommendedResources.slice(
     offset,
@@ -163,7 +110,6 @@ const RecommendedResources = () => {
         </div>
       )}
 
-      {/* React Paginate component */}
       <ReactPaginate
         previousLabel={"Previous"}
         nextLabel={"Next"}
