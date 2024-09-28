@@ -32,7 +32,7 @@ const Resources = () => {
       // If the book is already bookmarked, unbookmark it
       if (bookmarkedBooks.includes(bookId)) {
         const response = await axios.post("/resource/api/v1/bookmarkResource", {
-          bookId,
+          resourceId : bookId,
         });
         if (response.data.success) {
           setBookmarkedBooks(
@@ -42,7 +42,7 @@ const Resources = () => {
       } else {
         // Bookmark the book if not already bookmarked
         const response = await axios.post("/resource/api/v1/bookmarkResource", {
-          bookId,
+          resourceId : bookId,
         });
         if (response.data.success) {
           setBookmarkedBooks([...bookmarkedBooks, bookId]);
