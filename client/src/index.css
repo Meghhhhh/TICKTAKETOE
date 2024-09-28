@@ -10,39 +10,32 @@
   --body: "Baskervville", serif;
   --head: "Playfair Display", serif;
   --background-image-d: #171717;
-  /* Light mode background gradient */
-  --background-image-l: #ffc2d1;
-  /* #171717
-  #6A6A6A
-  #9DF9EB
-  #CB96F7
-  #F1EBF2 */ 
+  --background-image-l: #eab208cb;
 
-  /* dark base-palette: FFC2D1,FFE5EC,FFB3C6,FF8FAB,FB6F92   ; */
-  --grid-color-l: #323131;
-  --grid-color-d: #f1ebf2;
-  --bg-glass-l: #ff8fab69;
+  --grid-color-l: #af88126e;
+  --grid-color-d: rgba(242, 242, 235, 0.425);
+  --bg-glass-l: #eab20887;
   --bg-glass-d: #32313196;
 
   --primary-color: #6a6a6a;
   --secondary-color: #323131;
   --tertiary-color: #f1ebf2;
-  --text-color: #ff8fab;
+  --text-color: #EAB308;
   --gridc: var(--grid-color-d);
   --background-image: var(--background-image-d);
   --button-bg: var(--button-bg-d);
   --bg-glass: var(--bg-glass-d);
  
 
-  --texti-color-d: #ffb3c6;
+  --texti-color-d: #EAB308;
   --texti-color-l: #ffffff60;
   --texti-color: var(--texti-color-d);
   --gen-col: #ffffff88;
 }
 
 [data-theme="light"] {
-  --primary-color: #ffb3c6;
-  --secondary-color: #ff8fab;
+  --primary-color: #323131;
+  --secondary-color: #ffffff88;
   --tertiary-color: #fb6f92;
   --text-color: #6a6a6a;
   --texti-color: var(--texti-color-l);

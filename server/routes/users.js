@@ -436,4 +436,20 @@ router.get(
   })
 );
 
+router.get("/getBookmarkedBooks", isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user.user._id).populate("bookmarkedBooks");
+  res.status(200).json({
+    success: true,
+    data: user.bookmarkedBooks,
+  });
+});
+
+router.get("/getFavouriteResources", isLoggedIn, async (req, res) => {
+  const user = await User.findById(req.user.user._id).populate("favouriteResources");
+  res.status(200).json({
+    success: true,
+    data: user.favouriteResources,
+  });
+});
+
 module.exports = router;
