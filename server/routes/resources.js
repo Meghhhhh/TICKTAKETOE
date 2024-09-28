@@ -6,7 +6,6 @@ const loggedIn = require("../middleware/isLoggedIn.js");
 const isAdmin = require("../middleware/isAdmin");
 const User = require("../models/user.js");
 
-
 const {
   getStorage,
   ref,
@@ -114,7 +113,6 @@ router.post(
     });
   })
 );
-
 
 router.post(
   "/postResource",
@@ -429,6 +427,7 @@ router.post(
   })
 );
 
+// Content-Based Recommendation
 router.post(
   "/recommendResourcesByContent",
   catchAsync(async (req, res) => {
@@ -444,17 +443,22 @@ router.post(
     }
 
     // Find similar resources by category and tags
-    const recommendedResources = await Resources.find({
+    let recommendedResources = await Resources.find({
       _id: { $ne: resourceId }, // Exclude the original resource
       category: resource.category,
       tags: { $in: resource.tags },
     }).limit(10); // Limit results for simplicity
 
+    // If no similar resources found, return random resources
     if (recommendedResources.length === 0) {
+      recommendedResources = await Resources.aggregate([
+        { $sample: { size: 10 } },
+      ]);
       return res.json({
-        success: false,
-        status: 404,
-        message: "No similar resources found",
+        success: true,
+        status: 200,
+        message: "No similar resources found, showing random resources",
+        data: recommendedResources,
       });
     }
 
@@ -467,6 +471,7 @@ router.post(
   })
 );
 
+// Collaborative Filtering Recommendation
 router.post(
   "/recommendResourcesByCollaborativeFiltering",
   isLoggedIn,
@@ -478,11 +483,16 @@ router.post(
       $or: [{ ratings: { $elemMatch: { userId } } }, { bookmarkedBy: userId }],
     });
 
+    // If no interactions are found, return random resources
     if (userInteractions.length === 0) {
+      const randomResources = await Resources.aggregate([
+        { $sample: { size: 10 } },
+      ]);
       return res.json({
-        success: false,
-        status: 404,
-        message: "No interactions found for this user",
+        success: true,
+        status: 200,
+        message: "No interactions found, showing random resources",
+        data: randomResources,
       });
     }
 
@@ -491,7 +501,7 @@ router.post(
     const tags = userInteractions.flatMap((r) => r.tags);
 
     // Find resources rated/bookmarked by other users with similar interactions
-    const recommendedResources = await Resources.find({
+    let recommendedResources = await Resources.find({
       $and: [
         { _id: { $nin: userInteractions.map((r) => r._id) } }, // Exclude already interacted resources
         {
@@ -504,11 +514,16 @@ router.post(
       ],
     }).limit(10);
 
+    // If no recommended resources, return random resources
     if (recommendedResources.length === 0) {
+      recommendedResources = await Resources.aggregate([
+        { $sample: { size: 10 } },
+      ]);
       return res.json({
-        success: false,
-        status: 404,
-        message: "No recommendations available",
+        success: true,
+        status: 200,
+        message: "No recommendations available, showing random resources",
+        data: recommendedResources,
       });
     }
 
@@ -614,7 +629,5 @@ router.post(
     });
   })
 );
-
-module.exports = router;
 
 module.exports = router;

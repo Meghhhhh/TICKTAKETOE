@@ -5,6 +5,7 @@ import Genres from "./Genres";
 import Recommended from "./Recommended";
 import Footer from "./Footer";
 import Resources from "./Resources";
+import RecommendedResources from "./RecommendedResources";
 const Home = () => {
   return (
     <div>
@@ -22,6 +23,7 @@ const Home = () => {
       </div>
       {/* <Genres /> */}
       <Resources />
+      <RecommendedResources />
       <Recommended />
       <Footer />
     </div>
