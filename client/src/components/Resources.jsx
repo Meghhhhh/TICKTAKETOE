@@ -9,13 +9,15 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 3;
-
+  const debounceDelay = 1000;
   useEffect(() => {
     const fetchResources = async () => {
       try {
         const response = await axios.post("/resource/api/v1/getResources");
-        setResources(response.data.data); // Store all resources in state
+        setResources(response.data.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -27,8 +29,53 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   }, []);
 
   const handlePageClick = (event) => {
-    setCurrentPage(event.selected); // Set the selected page when the user clicks a page button
+    setCurrentPage(event.selected);
   };
+
+  // Debounce search functionality
+  useEffect(() => {
+    const handler = setTimeout(async () => {
+      if (searchQuery.trim()) {
+        setLoading(true);
+        try {
+          const response = await axios.post(
+            "/resource/api/v1/searchResources",
+            {
+              keyword: searchQuery,
+            }
+          );
+          if (response.data.success) {
+            setResources(response.data.data);
+            setCurrentPage(0);
+          } else {
+            setResources([]);
+          }
+        } catch (error) {
+          setError("Error fetching search results");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        // Reset to fetch all resources if search query is empty
+        const fetchRes = async () => {
+          setLoading(true);
+          try {
+            const response = await axios.post("/resource/api/v1/getResources");
+            setResources(response.data.data);
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchRes();
+      }
+    }, debounceDelay);
+
+    return () => {
+      clearTimeout(handler); // Cleanup on unmount or searchQuery change
+    };
+  }, [searchQuery]);
 
   const offset = currentPage * itemsPerPage;
   const currentItems = resources.slice(offset, offset + itemsPerPage);
@@ -43,6 +90,16 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
         Resources
         <span className={style.span} />
       </h2>
+
+      <div className={style.searchContainer}>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search for resources..."
+          className={style.searchInput}
+        />
+      </div>
 
       {loading ? (
         <p>Loading...</p>
