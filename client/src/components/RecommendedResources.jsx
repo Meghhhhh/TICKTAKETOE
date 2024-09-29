@@ -93,6 +93,7 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
                   />
                   <div className={style.content}>
                     <h3>{resource.title}</h3>
+                    <h3>{resource.userId?.name}</h3>
                   </div>
                 </div>
               </div>
