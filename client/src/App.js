@@ -70,6 +70,21 @@ function App() {
        return <Navigate to="/auth/login" />;
      }
    };
+     const DashRoute = ({ element }) => {
+       const { isLoggedIn } = useSelector((state) => state.user);
+
+       if (loading) {
+         return <h2>loading</h2>;
+       }
+       if (isLoggedIn) {
+
+           return element;
+      
+
+       } else {
+         return <Navigate to="/auth/login" />;
+       }
+     };
     const PrivateRoute = ({ element }) => {
       const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
 
@@ -117,7 +132,7 @@ function App() {
             />
             <Route
               path="/dashboard"
-              element={<PrivateRoute element={<Dashboard />} />}
+              element={<DashRoute element={<Dashboard />} />}
             />
             <Route
               path="/admin/*"
