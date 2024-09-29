@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import styles from "../module/libadmin.module.css";
 import { IoChevronBackCircle } from "react-icons/io5";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Libadmin = () => {
   const [loading, setLoading] = useState(false);
@@ -33,22 +35,26 @@ const Libadmin = () => {
         withCredentials: true,
       })
       .then((res) => {
-        
         console.log(res);
         setLoading(false);
+        toast.success("Book lent successfully!");
+        // Reset form values
+        emailRef.current.value = "";
+        isbnRef.current.value = "";
+        dateRef.current.value = "";
       })
       .catch((error) => {
         console.error(error);
         setLoading(false);
+        toast.error(error.response.data.message);
       });
-    // console.log(formData);
   };
+
   const handleSubmit1 = (event) => {
     event.preventDefault();
     setLoading(true);
     const email = emailRef1.current.value;
     const isbn = isbnRef1.current.value;
-
 
     const formData = {
       ISBN: isbn,
@@ -63,20 +69,23 @@ const Libadmin = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("hello");
-        
         console.log(res);
         setLoading(false);
+        toast.success("Book un-lent successfully!");
+        // Reset form values
+        emailRef1.current.value = "";
+        isbnRef1.current.value = "";
       })
       .catch((error) => {
         console.error(error);
         setLoading(false);
+        toast.error("Error un-lending book.");
       });
-    // console.log(formData);
   };
 
   return (
     <div className={styles.wrapper}>
+      <ToastContainer />
       <div className={styles.wrap}>
         <h1 className={styles.title}>LendBook</h1>
         <form
@@ -117,11 +126,7 @@ const Libadmin = () => {
               required
             />
           </div>
-          <button
-            className={styles.sendButton}
-            id="submit"
-            type="submit"
-          >
+          <button className={styles.sendButton} id="submit" type="submit">
             SAVE
           </button>
         </form>
