@@ -30,7 +30,7 @@ router.post("/lendBook", isLoggedIn, async (req, res) => {
         data: null,
       });
 
-    if (book.quantity >= 0) {
+    if (book.quantity > 0) {
       book.quantity = book.quantity - 1;
       user.borrowedBooks.push(bookId);
       user.bookHistory.push(bookId);
@@ -55,7 +55,7 @@ router.post("/lendBook", isLoggedIn, async (req, res) => {
       return res.status(400).json({
         success: false,
         status: 400,
-        message: "Book sold out",
+        message: "Book Not available",
         data: null,
       });
     }
