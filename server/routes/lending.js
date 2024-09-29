@@ -9,6 +9,20 @@ const Lend = require("../models/lending.js");
 router.post("/lendBook", isLoggedIn, async (req, res) => {
   try {
     const { ISBN, endDate, email } = req.body;
+    const currDate = new Date();
+
+    // Ensure endDate is a Date object if it comes as a string
+    const formattedEndDate = new Date(endDate);
+
+    // Check if endDate is not earlier than today
+    if (formattedEndDate < currDate.setHours(0, 0, 0, 0))
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "Invalid date",
+        data: null,
+      });
+
     const book = await Book.findOne({ ISBN });
     if (!book)
       return res.status(400).json({
@@ -22,7 +36,7 @@ router.post("/lendBook", isLoggedIn, async (req, res) => {
 
     const user = await User.findOne({ email });
 
-    if(!user)
+    if (!user)
       return res.status(400).json({
         success: false,
         status: 400,
@@ -39,7 +53,7 @@ router.post("/lendBook", isLoggedIn, async (req, res) => {
         lendedBy: user._id,
         lendedBook: bookId,
         startDate: Date.now(),
-        endDate,
+        endDate: formattedEndDate,
       });
 
       const lendedDetails = await lend.save();
@@ -48,14 +62,14 @@ router.post("/lendBook", isLoggedIn, async (req, res) => {
       return res.status(200).json({
         success: true,
         status: 200,
-        message: "Book lending successfull",
+        message: "Book lending successful",
         data: lendedDetails,
       });
     } else {
       return res.status(400).json({
         success: false,
         status: 400,
-        message: "Book Not available",
+        message: "Book not available",
         data: null,
       });
     }
@@ -85,7 +99,10 @@ router.post(
       book.quantity = book.quantity + 1;
       user.borrowedBooks.pull(bookId);
 
-      const lend = await Lend.findOne({ lendedBy: user._id, lendedBook: bookId });
+      const lend = await Lend.findOne({
+        lendedBy: user._id,
+        lendedBook: bookId,
+      });
       if (!lend) {
         return res.status(404).json({
           success: false,
