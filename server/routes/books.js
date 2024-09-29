@@ -194,7 +194,7 @@ router.post(
 
 router.get(
   "/getLatests",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const latestBooks = await Book.find({
@@ -202,7 +202,7 @@ router.get(
     }).sort({ createdAt: -1 });
 
     if (latestBooks.length === 0) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         status: 400,
         message: "No latest books available",

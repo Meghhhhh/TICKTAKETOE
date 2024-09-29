@@ -7,7 +7,6 @@ import style from "../module/resources.module.css";
 const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
   const [recommendedResources, setRecommendedResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5;
 
@@ -37,7 +36,7 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
 
         setRecommendedResources(combinedData);
       } catch (err) {
-        setError(err.message);
+        console.log(err.message);
       } finally {
         setLoading(false);
       }
@@ -69,10 +68,8 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
 
       {loading ? (
         <p>Loading...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
       ) : currentItems.length === 0 ? (
-        <p className={style.noResourcesMessage}>No resources available</p>
+        <p className={style.noResourcesMessage}>Please login to get recommendations</p>
       ) : (
         <div className={style.galleryContainer}>
           {currentItems.map((resource, index) => (
@@ -120,26 +117,29 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
         </div>
       )}
 
-      <ReactPaginate
-        previousLabel={"Previous"}
-        nextLabel={"Next"}
-        breakLabel={"..."}
-        pageCount={pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={3}
-        onPageChange={handlePageClick}
-        containerClassName={style.pagination}
-        pageClassName={style.pageItem}
-        pageLinkClassName={style.pageLink}
-        previousClassName={style.pageItem}
-        nextClassName={style.pageItem}
-        previousLinkClassName={style.pageLink}
-        nextLinkClassName={style.pageLink}
-        breakClassName={style.pageItem}
-        breakLinkClassName={style.pageLink}
-        activeClassName={style.active}
-        disabledClassName={style.disabled}
-      />
+      {/* Conditional rendering for pagination */}
+      {currentItems.length > 0 && pageCount > 1 && (
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={3}
+          onPageChange={handlePageClick}
+          containerClassName={style.pagination}
+          pageClassName={style.pageItem}
+          pageLinkClassName={style.pageLink}
+          previousClassName={style.pageItem}
+          nextClassName={style.pageItem}
+          previousLinkClassName={style.pageLink}
+          nextLinkClassName={style.pageLink}
+          breakClassName={style.pageItem}
+          breakLinkClassName={style.pageLink}
+          activeClassName={style.active}
+          disabledClassName={style.disabled}
+        />
+      )}
     </div>
   );
 };

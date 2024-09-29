@@ -17,7 +17,7 @@
 .noResourcesMessage {
   text-align: center;
   color: var(--text-color); /* Use your existing text color variable */
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   margin: 20px auto;
   background-color: var(--bg-glass); /* Light red background for emphasis */

@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import style from "../module/recommanded.module.css";
+import Loader from "./Loader";
+import ReactPaginate from "react-paginate";
+import style from "../module/resources.module.css";
 
 const Recommended = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get("/books/api/v1/getLatests");
-        console.log(response.data);
-        setBooks(response.data.data);
+        setBooks(response?.data?.data);
       } catch (err) {
-        setError(err.message);
+        console.log(err.message);
       } finally {
         setLoading(false);
       }
@@ -23,18 +25,28 @@ const Recommended = () => {
     fetchBooks();
   }, []);
 
+  const offset = currentPage * itemsPerPage;
+  const currentItems = books.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(books.length / itemsPerPage);
+
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
+
   return (
     <div>
-      <div>
-        <h2
-          className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`}
-          id="section-title1"
-        >
-          New Arrivals Books
-          <span className={style.span} />
-        </h2>
-        <div className={style.galleryConatiner}>
-          {books && books.map((book, index) => (
+      <h2 className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`} id="section-title1">
+        New Arrivals Books
+        <span className={style.span} />
+      </h2>
+
+      {loading ? (
+        <Loader />
+      ) : currentItems.length === 0 ? (
+        <p>No books available</p>
+      ) : (
+        <div className={style.galleryContainer}>
+          {currentItems.map((book, index) => (
             <div key={index}>
               <div className={style.row}>
                 <div
@@ -47,7 +59,7 @@ const Recommended = () => {
                     className={style.bookiImg}
                   />
                   <div className={style.content}>
-                    <h3 >{book.title}</h3>
+                    <h3>{book.title}</h3>
                     <h6>{book.year}</h6>
                     <h5>{book.genre}</h5>
                   </div>
@@ -56,9 +68,34 @@ const Recommended = () => {
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  );
-};
+      )}
 
-export default Recommended;
+      {/* Conditional rendering for pagination */}
+      {currentItems.length > 0 && pageCount > 1 && (
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={3}
+          onPageChange={handlePageClick}
+          containerClassName={style.pagination}
+          pageClassName={style.pageItem}
+          pageLinkClassName={style.pageLink}
+          previousClassName={style.pageItem}
+          nextClassName={style.pageItem}
+          previousLinkClassName={style.pageLink}
+          nextLinkClassName={style.pageLink}
+          breakClassName={style.pageItem}
+          breakLinkClassName={style.pageLink}
+          activeClassName={style.active}
+          disabledClassName={style.disabled}
+          />
+        )}
+      </div>
+    );
+  };
+  
+  export default Recommended;
+  

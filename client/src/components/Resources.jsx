@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
+import Loader from "./Loader";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import style from "../module/resources.module.css";
 
 const Resources = ({ favouriteResources, toggleFavourite }) => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filter, setFilter] = useState("all"); // State for managing resource type filter
+  const [filter, setFilter] = useState("all");
 
   const itemsPerPage = 5;
   const debounceDelay = 1000;
@@ -21,7 +21,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
         const response = await axios.post("/resource/api/v1/getResources");
         setResources(response.data.data);
       } catch (err) {
-        setError(err.message);
+        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -34,18 +34,13 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
     setCurrentPage(event.selected);
   };
 
-  // Debounce search functionality
   useEffect(() => {
     const handler = setTimeout(async () => {
       if (searchQuery.trim()) {
-        setLoading(true);
         try {
-          const response = await axios.post(
-            "/resource/api/v1/searchResources",
-            {
-              keyword: searchQuery,
-            }
-          );
+          const response = await axios.post("/resource/api/v1/searchResources", {
+            keyword: searchQuery,
+          });
           if (response.data.success) {
             setResources(response.data.data);
             setCurrentPage(0);
@@ -53,21 +48,17 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
             setResources([]);
           }
         } catch (error) {
-          setError("Error fetching search results");
-        } finally {
-          setLoading(false);
+          console.log(error);
+          
         }
       } else {
-        // Reset to fetch all resources if search query is empty
         const fetchRes = async () => {
-          setLoading(true);
           try {
             const response = await axios.post("/resource/api/v1/getResources");
             setResources(response.data.data);
           } catch (err) {
-            setError(err.message);
-          } finally {
-            setLoading(false);
+            console.log(err);
+            
           }
         };
         fetchRes();
@@ -75,10 +66,9 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
     }, debounceDelay);
 
     return () => {
-      clearTimeout(handler); 
+      clearTimeout(handler);
     };
   }, [searchQuery]);
-
 
   const filteredResources = resources.filter((resource) => {
     if (filter === "all") {
@@ -93,10 +83,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
 
   return (
     <div>
-      <h2
-        className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`}
-        id="section-title1"
-      >
+      <h2 className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`} id="section-title1">
         Resources
         <span className={style.span} />
       </h2>
@@ -125,16 +112,14 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
+        <Loader />
       ) : (
         <div className={style.galleryContainer}>
           {currentItems.map((resource, index) => (
             <div
               key={index}
               className={style.bookContainer}
-              onClick={() => window.open(resource.link, "_blank")} // Open link in a new tab
+              onClick={() => window.open(resource.link, "_blank")}
             >
               <div className={style.row}>
                 <div
@@ -155,7 +140,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
               <button
                 className={style.btn}
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent the parent onClick from firing
+                  e.stopPropagation();
                   toggleFavourite(resource._id);
                 }}
               >
@@ -165,9 +150,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
                   <IoBookmarkOutline size={20} />
                 )}
                 <span>
-                  {favouriteResources.includes(resource._id)
-                    ? "Unfavourite"
-                    : "Favourite"}
+                  {favouriteResources.includes(resource._id) ? "Unfavourite" : "Favourite"}
                 </span>
               </button>
             </div>
@@ -175,26 +158,29 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
         </div>
       )}
 
-      <ReactPaginate
-        previousLabel={"Previous"}
-        nextLabel={"Next"}
-        breakLabel={"..."}
-        pageCount={pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={3}
-        onPageChange={handlePageClick}
-        containerClassName={style.pagination}
-        pageClassName={style.pageItem}
-        pageLinkClassName={style.pageLink}
-        previousClassName={style.pageItem}
-        nextClassName={style.pageItem}
-        previousLinkClassName={style.pageLink}
-        nextLinkClassName={style.pageLink}
-        breakClassName={style.pageItem}
-        breakLinkClassName={style.pageLink}
-        activeClassName={style.active}
-        disabledClassName={style.disabled}
-      />
+      {/* Conditional rendering for pagination */}
+      {currentItems.length > 0 && pageCount > 1 && (
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={3}
+          onPageChange={handlePageClick}
+          containerClassName={style.pagination}
+          pageClassName={style.pageItem}
+          pageLinkClassName={style.pageLink}
+          previousClassName={style.pageItem}
+          nextClassName={style.pageItem}
+          previousLinkClassName={style.pageLink}
+          nextLinkClassName={style.pageLink}
+          breakClassName={style.pageItem}
+          breakLinkClassName={style.pageLink}
+          activeClassName={style.active}
+          disabledClassName={style.disabled}
+        />
+      )}
     </div>
   );
 };
