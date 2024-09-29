@@ -6,91 +6,112 @@
 ![MongoDB](https://img.shields.io/badge/Database-MongoDB-green?style=flat&logo=mongodb)
 ![Firebase](https://img.shields.io/badge/Storage-Firebase-orange?style=flat&logo=firebase)
 
-## <h1>🚀 Project Overview</h1>
+## 🚀 Project Overview
 
-The **E-Library with User-Based Recommendation System** is an innovative platform designed to centralize access to study materials and improve the student learning experience through personalized content recommendations. Our platform tackles inefficiencies in finding relevant study resources by combining a digital library with intelligent recommendation algorithms, along with features to manage offline libraries.
-
----
-
-## <h2>❗ Problem Statement</h2>
-
-Students currently lack a centralized and efficient platform to access, share, and discover relevant study materials. Existing solutions often miss out on personalized recommendations, which leads to time-consuming searches for appropriate resources.
+The **E-Library with User-Based Recommendation System** is an innovative platform designed to centralize access to study materials and improve the student learning experience through personalized content recommendations. Our platform combines a digital library with intelligent recommendation algorithms, along with features to manage offline libraries.
 
 ---
 
-## <h2>💡 Proposed Solution</h2>
+## ❗ Problem Statement
 
-Our platform provides a comprehensive **digital library** where students can access, upload, and share study materials, while enjoying personalized content recommendations powered by an intelligent recommendation system. Additionally, the platform includes an offline library management system for handling physical resources.
-
----
-
-## <h2>🌟 Key Features</h2>
-
-### <h3>1. Resource Access & Upload</h3>  
-   - 📁 **User-friendly interface** for browsing and uploading study materials (PDFs, documents, presentations, etc.).
-
-### <h3>2. Recommendation System</h3>  
-   - 🔍 **Intelligent algorithm** that suggests relevant study materials based on user behavior, popular content, recent uploads, and collaborative filtering.
-
-### <h3>3. Search and Filter Options</h3>  
-   - 🛠️ **Robust search functionality** with advanced filters for efficient discovery of resources.
-
-### <h3>4. Rating & Feedback System</h3>  
-   - ⭐ **Community-driven rating system** where users can review and rate resources to highlight high-quality materials.
-
-### <h3>5. Chatbot Assistant</h3>  
-   - 🤖 **AI-powered chatbot** to assist users with queries, resource recommendations, and platform navigation.
-
-### <h3>6. Offline Library Management System</h3>  
-   - 📚 **Manage physical library resources**, such as lending books, through an offline system for individual libraries.
-
-### <h3>7. Role-Based Access Control</h3>  
-   - 🔑 **Three distinct roles** with specific permissions:
-     - User: Access to resources and recommendations
-     - Librarian: Resource management
-     - Admin: Full control over system functionality
+Students currently lack a centralized and efficient platform to access, share, and discover relevant study materials. Existing solutions miss out on personalized recommendations, leading to time-consuming searches for appropriate resources.
 
 ---
 
-## <h2>🛠️ Technologies Used</h2>
+## 💡 Proposed Solution
 
-- **Backend**: Node.js for server-side development and RESTful API creation
-- **Frontend**: React.js for building a responsive and interactive user interface
-- **Database**: MongoDB for structured data storage
-- **File Storage**: Firebase for secure and scalable cloud storage of study materials
-
----
-
-## <h2>📋 Completed Tasks</h2>
-
-- ✅ Requirement analysis and project planning
-- ✅ Technology stack selection
-- ✅ Basic backend architecture setup using Node.js
-- ✅ Initial database schema design in MongoDB
-- ✅ Frontend prototype development using React.js
-- ✅ User authentication implementation
-- ✅ Created the user interface for resource browsing and uploading
+Our platform provides:
+- A **comprehensive digital library** for students to access, upload, and share study materials.
+- **Personalized content recommendations** powered by intelligent algorithms.
+- An **offline library management system** for handling physical resources.
 
 ---
 
-## <h2>🔄 Ongoing Tasks</h2>
+## 🌟 Key Features
 
-- 🔧 Developing the core recommendation algorithm
-- 🎨 Creating customizable profiles that track user preferences, activity, and learning history
-- 📂 Implementing features to save and organize resources for quick access
+- **Resource Access & Upload**: Easy-to-use interface for uploading and browsing study materials.
+- **Recommendation System**: Suggests relevant study materials based on user behavior.
+- **Search and Filter Options**: Advanced filters for efficient discovery of resources.
+- **Rating & Feedback System**: Community-driven ratings to highlight high-quality materials.
+- **AI-Powered Chatbot**: Assists users with queries and resource recommendations.
+- **Offline Library Management System**: Manage physical library resources offline.
+- **Role-Based Access Control**: Distinct roles with specific permissions for users, librarians, and admins.
 
 ---
 
-## <h2>⏭️ Next Steps</h2>
+## 🛠️ Technologies Used
+
+- **Backend**: Node.js
+- **Frontend**: React.js
+- **Database**: MongoDB
+- **Storage**: Firebase
+
+---
+
+## 🚨 **How to Run the Project** 🚨
+
+### ⚙️ **Backend Setup**:
+
+1. **Navigate to the backend directory**:
+   ```bash
+   cd backend
+   ```
+2. **Install the necessary dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Start the backend server**:
+   ```bash
+   node index
+   ```
+4. **Important**: The backend will **not run without environment variables**. A sample `.env` file is provided—ensure you configure it correctly before running the server!
+
+---
+
+### 🌐 **Frontend Setup**:
+
+1. **Navigate to the frontend directory**:
+   ```bash
+   cd frontend
+   ```
+2. **Install the necessary dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Run the frontend application**:
+   ```bash
+   npm start
+   ```
+
+---
+
+### ⚠️ **Reminder**: Without configuring the `.env` file, the backend will **not function** properly. Make sure to set up the environment variables as required.
+
+---
+
+## 📋 Completed Tasks
+
+- Requirement analysis and project planning
+- Technology stack selection
+- Basic backend architecture setup
+- Database schema design
+- Frontend prototype development
+- User authentication implementation
+- Recommendation algorithm development
+- Customizable user profiles
+- Payments and dashboard features
+
+---
+
+## ⏭️ Next Steps
 
 1. Finalize and test the recommendation system
-2. Implement the rating and feedback functionality
-3. Develop advanced search and filter options
-4. Conduct thorough testing and bug fixing
-5. Prepare for beta release and collect user feedback
+2. Implement advanced search and filter options
+3. Conduct testing and bug fixing
+4. Prepare for beta release
 
 ---
 
-## <h2>🏁 Conclusion</h2>
+## 🏁 Conclusion
 
-The **E-Library with User-Based Recommendation System** aims to revolutionize how students discover, access, and engage with educational resources. By offering a personalized and user-centric design, combined with advanced technologies, we are building a more efficient and tailored learning experience. As we continue development, we remain focused on providing a valuable tool for students and educators alike.
+The **E-Library with User-Based Recommendation System** aims to revolutionize how students discover, access, and engage with educational resources. With a personalized design and advanced technology, we're building a tailored learning experience for students and educators alike.
