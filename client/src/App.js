@@ -26,8 +26,7 @@ import axios from "axios";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [isAdmin, setIsAdmin] = useState(false);
+
   const dispatch = useDispatch();
 
     useEffect(() => {
@@ -36,6 +35,7 @@ function App() {
           withCredentials: true,
         })
         .then((response) => {
+
 
           const { name, email, profilePicture, isAdmin, _id, isLibrarian } =
             response.data.data;
@@ -51,7 +51,25 @@ function App() {
         });
     }, [dispatch]);
 
+   const LibRoute = ({ element }) => {
+     const { isLoggedIn, isLibrarian } = useSelector((state) => state.user);
 
+
+
+     if (loading) {
+       return <h2>loading</h2>;
+     }
+     if (isLoggedIn) {
+       if (isLibrarian) {
+         return element;
+       } else if (!isLibrarian) {
+         return <Navigate to="/" />;
+       }
+       // return element;
+     } else {
+       return <Navigate to="/auth/login" />;
+     }
+   };
     const PrivateRoute = ({ element }) => {
       const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
 
@@ -60,10 +78,10 @@ function App() {
       }
       if (isLoggedIn) {
         if (isAdmin) {
-          // console.log("inside isAdmin");
+
           return element;
         } else if (!isAdmin) {
-          // console.log("inside !isAdmin");
+
           return <Navigate to="/" />;
         }
         // return element;
@@ -92,7 +110,7 @@ function App() {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/history" element={<Mybooks />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/libadmin" element={<Libadmin />} />
+            <Route path="/libadmin" element={<LibRoute element={<Libadmin />}/>} />
             <Route
               path="/admin"
               element={<PrivateRoute element={<Admin />} />}
