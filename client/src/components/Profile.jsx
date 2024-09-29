@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { IoBookmark } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
+import { logoutUser } from "../features/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const currentPassword = useRef("");
@@ -14,6 +16,7 @@ const Profile = () => {
   const repeatPassword = useRef("");
   const nameRef = useRef("");
   const phoneNumberRef = useRef("");
+  const dispatch = useDispatch(); 
 
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -97,7 +100,7 @@ const Profile = () => {
       .then((response) => {
         if (response.data.success) {
           toast.success("Logged out successfully!");
-          localStorage.removeItem("userId");
+ dispatch(logoutUser());
           setTimeout(() => {
             window.location.href = "/auth/login";
           }, 1500);
