@@ -2,25 +2,28 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import style from "../module/resources.module.css";
+import Loader from "./Loader"; // Import the Loader component
 
 const Bookmarks = () => {
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [favouriteResources, setFavouriteResources] = useState([]);
-  const [loadingBookmarks, setLoadingBookmarks] = useState(true);
-  const [loadingFavourites, setLoadingFavourites] = useState(true);
+  const [loading, setLoading] = useState(false); // Single loading state for all requests
   const [errorBookmarks, setErrorBookmarks] = useState(null);
   const [errorFavourites, setErrorFavourites] = useState(null);
 
   // Fetch Bookmarked Books
   useEffect(() => {
     const fetchBookmarkedBooks = async () => {
+      setLoading(true); // Start loading
       try {
-        const booksResponse = await axios.get("/users/api/v1/getBookmarkedBooks");
+        const booksResponse = await axios.get(
+          "/users/api/v1/getBookmarkedBooks"
+        );
         setBookmarkedBooks(booksResponse.data.data || []);
       } catch (err) {
         setErrorBookmarks(err.message);
       } finally {
-        setLoadingBookmarks(false);
+        setLoading(false); // End loading
       }
     };
 
@@ -30,13 +33,16 @@ const Bookmarks = () => {
   // Fetch Favourite Resources
   useEffect(() => {
     const fetchFavouriteResources = async () => {
+      setLoading(true); // Start loading
       try {
-        const resourcesResponse = await axios.get("/users/api/v1/getFavouriteResources");
+        const resourcesResponse = await axios.get(
+          "/users/api/v1/getFavouriteResources"
+        );
         setFavouriteResources(resourcesResponse.data.data || []);
       } catch (err) {
         setErrorFavourites(err.message);
       } finally {
-        setLoadingFavourites(false);
+        setLoading(false); // End loading
       }
     };
 
@@ -44,6 +50,7 @@ const Bookmarks = () => {
   }, []);
 
   const toggleBookmark = async (bookId) => {
+    setLoading(true); // Start loading
     try {
       if (bookmarkedBooks.some((book) => book._id === bookId)) {
         // Unbookmark the book if it is already bookmarked
@@ -69,12 +76,14 @@ const Bookmarks = () => {
       }
     } catch (err) {
       setErrorBookmarks(err.message);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
   const handleToggleFavouriteResource = async (resourceId) => {
+    setLoading(true); // Start loading
     try {
-      // Check if the resource is already favourited
       const isFavourited = favouriteResources.some(
         (resource) => resource._id === resourceId
       );
@@ -88,10 +97,11 @@ const Bookmarks = () => {
       } else {
         // Favourite the resource
         await axios.post("/users/api/v1/favouriteResource", { resourceId });
-        // Optionally, fetch the newly favourited resource details
       }
     } catch (err) {
       setErrorFavourites(err.message);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -99,18 +109,23 @@ const Bookmarks = () => {
     <div>
       <h2
         className={`${style.h2} ${style.sectionTitle} ${style.hasUnderline}`}
-        id="section-title2" style={{marginTop:"150px"}}
+        id="section-title2"
+        style={{ marginTop: "150px" }}
       >
         Bookmarked Books
         <span className={style.span} />
       </h2>
 
-      {loadingBookmarks ? (
-        <p>Loading bookmarks...</p>
+      {loading ? (
+        <Loader />
       ) : errorBookmarks ? (
-        <p>Error: {errorBookmarks}</p>
+        <p style={{ color: "gold", textAlign: "center" }}>
+          No favourite books added yet.
+        </p>
       ) : bookmarkedBooks.length === 0 ? (
-        <p>No bookmarked books added yet.</p>
+        <p style={{ color: "gold", textAlign: "center" }}>
+          No favourite books added yet.
+        </p>
       ) : (
         <div className={style.galleryContainer}>
           {bookmarkedBooks.map((book, index) => (
@@ -158,12 +173,16 @@ const Bookmarks = () => {
         <span className={style.span} />
       </h2>
 
-      {loadingFavourites ? (
-        <p>Loading favourite resources...</p>
+      {loading ? (
+        <Loader />
       ) : errorFavourites ? (
-        <p>Error: {errorFavourites}</p>
+        <p style={{ color: "gold", textAlign: "center" }}>
+          No favourite resources added yet.
+        </p>
       ) : favouriteResources.length === 0 ? (
-        <p>No favourite resources added yet.</p>
+        <p style={{ color: "gold", textAlign: "center" }}>
+          No favourite resources added yet.
+        </p>
       ) : (
         <div className={style.galleryContainer}>
           {favouriteResources.map((resource, index) => (
