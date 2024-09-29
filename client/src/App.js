@@ -4,7 +4,6 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TopBar from "./components/TopBar";
 import Home from "./components/Home";
-import Payment from "./components/Payment";
 import Background from "./components/Background";
 import FAQs from "./components/FAQs";
 import About from "./components/AboutUs";
@@ -26,6 +25,7 @@ import axios from "axios";
 
 function App() {
   const [loading, setLoading] = useState(true);
+
 
   const dispatch = useDispatch();
 
@@ -102,6 +102,9 @@ function App() {
         return <Navigate to="/auth/login" />;
       }
     };
+
+    
+ 
   return (
     <>
       <Background />
@@ -112,9 +115,15 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Signup />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/paymentfailed" element={<PaymentFailed />} />
-            <Route path="/paymentSuccess" element={<PaymentSuccess />} />
+
+            <Route
+              path="/paymentfailed"
+              element={<PaymentFailed /> }
+            />
+            <Route
+              path="/paymentSuccess"
+              element={<PaymentSuccess /> }
+            />
             <Route path="/myresources" element={<Myresources />} />
             <Route path="/addresources" element={<Addresources />} />
             <Route path="/faqs" element={<FAQs />} />
@@ -123,7 +132,10 @@ function App() {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/history" element={<Mybooks />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/libadmin" element={<LibRoute element={<Libadmin />}/>} />
+            <Route
+              path="/libadmin"
+              element={<LibRoute element={<Libadmin />} />}
+            />
             <Route
               path="/admin"
               element={<PrivateRoute element={<Admin />} />}
