@@ -1,5 +1,10 @@
-import React,{useEffect, useState} from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TopBar from "./components/TopBar";
@@ -30,47 +35,47 @@ function App() {
   // const [isAdmin, setIsAdmin] = useState(false);
   const dispatch = useDispatch();
 
-    useEffect(() => {
-      axios
-        .get(`/users/api/v1/getUser`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-
+  useEffect(() => {
+    axios
+      .get(`/users/api/v1/getUser`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        if (response) {
           const { name, email, profilePicture, isAdmin, _id, isLibrarian } =
-            response.data.data;
+            response?.data?.data;
           dispatch(
             setUser({ name, email, profilePicture, isAdmin, _id, isLibrarian })
           );
           setLoading(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          console.error("Failed to fetch user details");
-          setLoading(false);
-        });
-    }, [dispatch]);
-
-
-    const PrivateRoute = ({ element }) => {
-      const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
-
-      if (loading) {
-        return;
-      }
-      if (isLoggedIn) {
-        if (isAdmin) {
-          // console.log("inside isAdmin");
-          return element;
-        } else if (!isAdmin) {
-          // console.log("inside !isAdmin");
-          return <Navigate to="/" />;
         }
-        // return element;
-      } else {
-        return <Navigate to="/auth/login" />;
+      })
+      .catch((error) => {
+        console.error(error);
+        console.error("Failed to fetch user details");
+        setLoading(false);
+      });
+  }, [dispatch]);
+
+  const PrivateRoute = ({ element }) => {
+    const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
+
+    if (loading) {
+      return;
+    }
+    if (isLoggedIn) {
+      if (isAdmin) {
+        // console.log("inside isAdmin");
+        return element;
+      } else if (!isAdmin) {
+        // console.log("inside !isAdmin");
+        return <Navigate to="/" />;
       }
-    };
+      // return element;
+    } else {
+      return <Navigate to="/auth/login" />;
+    }
+  };
   return (
     <>
       <Background />

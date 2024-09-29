@@ -13,7 +13,7 @@ const Myresources = () => {
     const fetchResources = async () => {
       try {
         const response = await axios.post("resource/api/v1/getMyResources" );
-        setResources(response.data.data);
+        setResources(response?.data?.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching resources:", error);
@@ -47,7 +47,7 @@ const Myresources = () => {
 
   return (
     <div className={styles.container}>
-      {resources?.length === 0 ? (
+      {resources?.length === 0 || resources === null ? (
         <div className={styles.noResourcesMessage}>No resources available</div>
       ) : (
         resources?.map((resource) => (

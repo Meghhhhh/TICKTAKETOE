@@ -425,7 +425,7 @@ router.get(
         !user.favouriteResources ||
         user.favouriteResources.length === 0
       ) {
-        return res.status(404).json({
+        return res.json({
           success: false,
           status: 404,
           message: "No favourite resources found",
