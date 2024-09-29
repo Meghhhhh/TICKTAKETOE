@@ -32,7 +32,7 @@ router.post(
     const { id, userId } = req.body;
 
     if (id) {
-      const resource = await Resources.findById(id).populate('userId');
+      const resource = await Resources.findById(id).populate("userId");
       if (!resource)
         return res.json({
           success: false,
@@ -50,7 +50,7 @@ router.post(
     } else if (userId) {
       const resources = await Resources.find({ userId })
         .sort({ createdAt: -1 })
-        .populate('userId');
+        .populate("userId");
       return res.json({
         success: true,
         status: 200,
@@ -60,7 +60,7 @@ router.post(
     } else {
       const resources = await Resources.find()
         .sort({ createdAt: -1 })
-        .populate('userId');
+        .populate("userId");
       return res.json({
         success: true,
         status: 200,
@@ -173,16 +173,14 @@ router.post(
 
     // const { error } = schema.validate(req.body);
     // if (error)
-      // return res.json({
-      //   success: false,
-      //   status: 401,
-      //   message: error.details[0].message,
-      //   data: null,
-      // });
+    // return res.json({
+    //   success: false,
+    //   status: 401,
+    //   message: error.details[0].message,
+    //   data: null,
+    // });
 
-    const { title, category, description, userId,tags } = req.body;
-
-    
+    const { title, category, description, userId, tags } = req.body;
 
     const userExists = await User.findById(userId);
     if (!userExists) {
@@ -272,7 +270,7 @@ router.post(
         category,
         description,
         userId,
-        tags
+        tags,
       });
       await resource.save();
       return res.json({
@@ -280,10 +278,9 @@ router.post(
         status: 200,
         message: "Resource posted successfully",
         data: resource,
-      });}
+      });
     }
-    
-  )
+  })
 );
 
 router.put(
@@ -485,13 +482,19 @@ router.post(
       _id: { $ne: resourceId }, // Exclude the original resource
       category: resource.category,
       tags: { $in: resource.tags },
-    }).limit(10); // Limit results for simplicity
+    })
+      .limit(10) // Limit results for simplicity
+      .populate({
+        path: "userId", // Populate userId with name
+        select: "name",
+      });
 
     // If no similar resources found, return random resources
     if (recommendedResources.length === 0) {
       recommendedResources = await Resources.aggregate([
         { $sample: { size: 10 } },
-      ]);
+      ]).exec();
+
       return res.json({
         success: true,
         status: 200,
@@ -519,13 +522,17 @@ router.post(
     // Get resources rated/bookmarked by the current user
     const userInteractions = await Resources.find({
       $or: [{ ratings: { $elemMatch: { userId } } }, { bookmarkedBy: userId }],
+    }).populate({
+      path: "userId", // Populate userId with name
+      select: "name",
     });
 
     // If no interactions are found, return random resources
     if (userInteractions.length === 0) {
       const randomResources = await Resources.aggregate([
         { $sample: { size: 10 } },
-      ]);
+      ]).exec();
+
       return res.json({
         success: true,
         status: 200,
@@ -550,13 +557,19 @@ router.post(
           ],
         },
       ],
-    }).limit(10);
+    })
+      .limit(10)
+      .populate({
+        path: "userId", // Populate userId with name
+        select: "name",
+      });
 
     // If no recommended resources, return random resources
     if (recommendedResources.length === 0) {
       recommendedResources = await Resources.aggregate([
         { $sample: { size: 10 } },
-      ]);
+      ]).exec();
+
       return res.json({
         success: true,
         status: 200,

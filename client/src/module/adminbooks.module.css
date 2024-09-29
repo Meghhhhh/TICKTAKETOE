@@ -1,7 +1,7 @@
 .body {
   background-image: var(--background-image);
   font-family: var(--body);
-  color: var(--primary-color);
+  color: var(--text-color);
   min-height: 90vh;
 }
 
@@ -88,14 +88,16 @@
   width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
-  border: 1px solid gray;
+  border: 1px solid var(--text-color);
   border-radius: 1rem;
   margin-right: 1rem;
   outline: none;
   margin: 1rem;
   background-color: var(--secondary-color);
+  color: var(--text-color);
 }
 .searchBar:focus {
+  text-decoration: none;
   border: 1px solid var(--primary-color);
 }
 .inside {
