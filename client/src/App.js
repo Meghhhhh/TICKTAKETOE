@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React,{useEffect, useState} from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TopBar from "./components/TopBar";
@@ -20,8 +20,57 @@ import Addresources from "./components/Addresources";
 import Bookmarks from "./components/Bookmarks";
 import Feedback from "./components/Feedback";
 import Dashboard from "./components/Dashboard";
+import { setUser } from "./features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+      axios
+        .get(`/users/api/v1/getUser`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+
+          const { name, email, profilePicture, isAdmin, _id, isLibrarian } =
+            response.data.data;
+          dispatch(
+            setUser({ name, email, profilePicture, isAdmin, _id, isLibrarian })
+          );
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          console.error("Failed to fetch user details");
+          setLoading(false);
+        });
+    }, [dispatch]);
+
+
+    const PrivateRoute = ({ element }) => {
+      const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
+
+      if (loading) {
+        return;
+      }
+      if (isLoggedIn) {
+        if (isAdmin) {
+          // console.log("inside isAdmin");
+          return element;
+        } else if (!isAdmin) {
+          // console.log("inside !isAdmin");
+          return <Navigate to="/" />;
+        }
+        // return element;
+      } else {
+        return <Navigate to="/auth/login" />;
+      }
+    };
   return (
     <>
       <Background />
@@ -44,9 +93,18 @@ function App() {
             <Route path="/history" element={<Mybooks />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/libadmin" element={<Libadmin />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin/*" element={<Admin />} />
+            <Route
+              path="/admin"
+              element={<PrivateRoute element={<Admin />} />}
+            />
+            <Route
+              path="/dashboard"
+              element={<PrivateRoute element={<Dashboard />} />}
+            />
+            <Route
+              path="/admin/*"
+              element={<PrivateRoute element={<Admin />} />}
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
