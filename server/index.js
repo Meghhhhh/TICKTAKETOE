@@ -24,7 +24,10 @@ const feedback = require("./routes/feedback.js");
 // Enable CORS for all origins
 app.use(
   cors({
-    origin: "*", // Allow all origins
+    origin: [
+      "https://tictechtoe.onrender.com",
+      "http://tictechtoe.onrender.com",
+    ], // Allow all origins
     methods: "GET,POST,PUT,DELETE",
     credentials: true, // Allow cookies to be sent from the
   })
