@@ -118,7 +118,8 @@ const TopBar = () => {
         location.pathname !== "/admin/books" &&
         location.pathname !== "/admin/librarian" &&
         location.pathname !== "/admin/AddAdmin" &&
-        location.pathname !== "/auth/register" && <Navbar />}
+        location.pathname !== "/auth/register" && 
+        location.pathname !== "/dashboard" && <Navbar />}
       {window.innerWidth > 1024 ? (
         <div className={style.rightComponent}>
           <label className={style.uiswitch}>
