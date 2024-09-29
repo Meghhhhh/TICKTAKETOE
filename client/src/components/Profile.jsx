@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoBookmark } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+
 const Profile = () => {
   const currentPassword = useRef("");
   const newPassword = useRef("");
@@ -20,6 +22,8 @@ const Profile = () => {
     authType: "",
     phoneNumber: "",
   });
+
+  const [overdueDetails, setOverdueDetails] = useState(null); // New state for overdue details
 
   useEffect(() => {
     axios
@@ -48,7 +52,7 @@ const Profile = () => {
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Failed to fetch user details");
+        toast.error("Failed to delete account");
       });
   };
 
@@ -93,10 +97,10 @@ const Profile = () => {
       .then((response) => {
         if (response.data.success) {
           toast.success("Logged out successfully!");
-           localStorage.removeItem("userId");
+          localStorage.removeItem("userId");
           setTimeout(() => {
             window.location.href = "/auth/login";
-          }, 1500); // 1.5 seconds delay
+          }, 1500);
         }
       })
       .catch((error) => {
@@ -147,17 +151,83 @@ const Profile = () => {
       });
   };
 
+  const handleFetchOverdueFees = () => {
+    axios
+      .get("/users/api/v1/calculateOverdueFees", { withCredentials: true })
+      .then((response) => {
+        if (response.data.success) {
+          console.log(response.data.data);
+
+          setOverdueDetails(response.data.data);
+          toast.success(response.data.message);
+        } else {
+          toast.error("Failed to fetch overdue fees");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Failed to fetch overdue fees");
+      });
+  };
+
+  const makePayment = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51PWtVZDuAWgKsNtLWlTBbBMPiEHIo9hs4ChscB7WaDf8MwCaKradFm0r7TE5gfT4r1AlVEvbI13RsmeM0ECu6RBA004zi06fDH"
+    );
+
+    // Hardcoded dummy data
+    const dummyProducts = [
+      {
+        name: "Books",
+        image:
+          "https://images.unsplash.com/photo-1604866830893-c13cafa515d5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9va3N8ZW58MHx8MHx8fDA%3D",
+        price: overdueDetails?.overallFee, // Price in cents
+        quantity: 1,
+      },
+    ];
+
+    const body = {
+      products: dummyProducts,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    try {
+      const response = await fetch("/payment/api/v1/create-checkout-session", {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const session = await response.json();
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.log(result.error);
+        toast.error(`user must be logged in to checkout`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(`user must be logged in to checkout`);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <div className={styles.avatarUpload}>
           <div className={styles.avatarPreview}>
             <div id="imagePreview">
-              <img
-                src={ images.profile}
-                className={`${styles.photo}`}
-                alt=""
-              />
+              <img src={images.profile} className={`${styles.photo}`} alt="" />
             </div>
           </div>
         </div>
@@ -283,6 +353,21 @@ const Profile = () => {
           <button onClick={handleLogout} className={styles.button}>
             Logout
           </button>
+        </div>
+        {/* New button for paying overdue fees */}
+        <div className={styles.btnContainer}>
+          <button onClick={handleFetchOverdueFees} className={styles.button}>
+            Overdue Fees
+          </button>
+          {overdueDetails && overdueDetails.overallFee !== 0 && (
+            <button
+              className={styles.button}
+              onClick={makePayment}
+              type="button"
+            >
+              Pay ₹{overdueDetails.overallFee}
+            </button>
+          )}
         </div>
       </div>
       <ToastContainer position="bottom-center" />

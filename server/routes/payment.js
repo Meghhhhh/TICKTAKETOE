@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const stripe = require("stripe")(process.env.STRIPE_CLIENT_SECRET);
 const isLoggedIn = require("../middleware/isLoggedIn.js");
+const User = require("../models/user.js");
+const Lend = require("../models/lending.js");
 
 router.post("/create-checkout-session", [isLoggedIn], async (req, res) => {
   try {
@@ -32,19 +34,30 @@ router.post("/create-checkout-session", [isLoggedIn], async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
-router.get("/paymentsuccess", async (req, res) => {
+router.get("/paymentsuccess", isLoggedIn, async (req, res) => {
   try {
-    const session = await stripe.checkout.sessions.retrieve(
-      req.query.session_id
-    );
-    const customer = await stripe.customers.retrieve(session.customer);
+    const userId = req.user.user._id; // Get the user ID from the session
 
-    // Handle post-payment success actions (e.g., save order to DB, send email)
-    res.redirect(`${process.env.CLIENT_URL}/paymentsuccess`);
+    // Delete all lendings where the user is lendedBy
+    const lendingsDeleted = await Lend.deleteMany({ lendedBy: userId });
+
+    console.log(
+      `Deleted ${lendingsDeleted.deletedCount} lendings for user ${userId}`
+    );
+
+    // Send a success response after performing all operations
+    res.status(200).json({
+      success: true,
+      message: "Lending records cleared and user profile updated",
+      deletedLendingsCount: lendingsDeleted.deletedCount,
+    });
   } catch (error) {
-    console.error("Error retrieving Stripe session:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error during payment success processing:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 });
 

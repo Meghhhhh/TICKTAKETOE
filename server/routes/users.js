@@ -5,7 +5,8 @@ const catchAsync = require("../utils/asyncMiddleware.js");
 const isLoggedIn = require("../middleware/isLoggedIn.js");
 const isAdmin = require("../middleware/isAdmin.js");
 const Book = require("../models/books.js");
-
+const Lendings = require("../models/lending.js");
+const moment = require("moment");
 router.get(
   "/getUser",
   [isLoggedIn],
@@ -418,7 +419,7 @@ router.get(
       const user = await User.findById(req.user.user._id).populate(
         "favouriteResources"
       );
-  
+
       if (
         !user ||
         !user.favouriteResources ||
@@ -431,7 +432,7 @@ router.get(
           data: null,
         });
       }
-  
+
       res.status(200).json({
         success: true,
         status: 200,
@@ -441,7 +442,6 @@ router.get(
     } catch (error) {
       console.log(error);
     }
-
   })
 );
 
@@ -464,5 +464,62 @@ router.get("/getFavouriteResources", isLoggedIn, async (req, res) => {
     data: user.favouriteResources,
   });
 });
+
+const FIXED_CHARGE = 50; // Fixed charge in INR
+const DAILY_OVERDUE_CHARGE = 10; // Overdue fee per day in INR
+
+// Route to calculate overdue fees
+router.get(
+  "/calculateOverdueFees",
+  catchAsync(async (req, res) => {
+    const userId = req.user.user._id; // Extract user ID from session
+
+    // Find all lendings for this user
+    const lendings = await Lendings.find({ lendedBy: userId })
+      .populate("lendedBook")
+      .exec();
+
+    if (!lendings.length) {
+      return res.json({
+        success: true,
+        status: 200,
+        message: "No lendings found for the user",
+        data: {
+          totalOverdueFee: 0,
+          fixedCharges: FIXED_CHARGE,
+          overallFee: 0,
+        },
+      });
+    }
+
+    let totalOverdueFee = 0;
+    const today = moment();
+
+    // Calculate overdue fees
+    lendings.forEach((lending) => {
+      const endDate = moment(lending.endDate);
+      const daysOverdue = today.diff(endDate, "days");
+
+      if (daysOverdue > 0) {
+        totalOverdueFee += daysOverdue * DAILY_OVERDUE_CHARGE;
+      }
+    });
+
+    // Total fee including fixed charge
+    const overallFee = totalOverdueFee + FIXED_CHARGE;
+  
+
+    res.json({
+      success: true,
+      status: 200,
+      message: "Overdue fees calculated successfully",
+      data: {
+        totalOverdueFee: `${totalOverdueFee} INR`,
+        fixedCharges: `${FIXED_CHARGE} INR`,
+        overallFee: `${overallFee}`,
+      },
+    });
+  })
+);
 
 module.exports = router;
