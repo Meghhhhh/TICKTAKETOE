@@ -100,9 +100,9 @@ const Profile = () => {
       .then((response) => {
         if (response.data.success) {
           toast.success("Logged out successfully!");
- dispatch(logoutUser());
           setTimeout(() => {
             window.location.href = "/auth/login";
+            dispatch(logoutUser());
           }, 1500);
         }
       })
