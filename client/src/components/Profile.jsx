@@ -5,7 +5,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoBookmark } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { logoutUser } from "../features/user/userSlice";
 import { useDispatch } from "react-redux";
@@ -16,6 +16,7 @@ const Profile = () => {
   const repeatPassword = useRef("");
   const nameRef = useRef("");
   const phoneNumberRef = useRef("");
+  const navigate = useNavigate();
   const dispatch = useDispatch(); 
 
   const [userDetails, setUserDetails] = useState({
@@ -58,7 +59,6 @@ const Profile = () => {
         toast.error("Failed to delete account");
       });
   };
-
   const handleClick = () => {
     const currentPass = currentPassword.current.value;
     const newPass = newPassword.current.value;
@@ -234,8 +234,6 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className={styles.wrapper}>
         <div className={styles.formContainer}>
           <div className={`${styles.passwordUser}`}>
             <div className={styles.inputField}>
@@ -249,6 +247,8 @@ const Profile = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className={styles.wrapper}>
         <div className={styles.tabs}>
           <div className={styles.tab}>
             <input
@@ -334,7 +334,7 @@ const Profile = () => {
           <Link
             to="/bookmarks"
             className={styles.button}
-            style={{ width: "100%" }}
+            style={{ width: "100%", textDecoration: "none" }}
           >
             <IoBookmark size={20} style={{ padding: "0 5px" }} /> Bookmarks
           </Link>
@@ -343,9 +343,18 @@ const Profile = () => {
           <Link
             to="/addresources"
             className={styles.button}
-            style={{ width: "100%" }}
+            style={{ width: "100%", textDecoration: "none" }}
           >
             Add Resource
+          </Link>
+        </div>
+        <div className={styles.btnContainer}>
+          <Link
+            to="/dashboard"
+            className={styles.button}
+            style={{ width: "100%", textDecoration: "none"}}
+          >
+            Dashboard
           </Link>
         </div>
         <div className={styles.btnContainer}>
