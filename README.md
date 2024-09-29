@@ -33,9 +33,18 @@ Our platform provides:
 - **Recommendation System**: Suggests relevant study materials based on user behavior.
 - **Search and Filter Options**: Advanced filters for efficient discovery of resources.
 - **Rating & Feedback System**: Community-driven ratings to highlight high-quality materials.
-- **AI-Powered Chatbot**: Assists users with queries and resource recommendations.
+- **History**: A way for users to maintain their loggings for which material they have lended.
+- **Bookmarking-system**: Bookmarking system for users to bookmark their favourite resources/books.
 - **Offline Library Management System**: Manage physical library resources offline.
-- **Role-Based Access Control**: Distinct roles with specific permissions for users, librarians, and admins.
+- **3 Role-Based Access Control**: Distinct roles with specific permissions for users, librarians, and admins.
+- **Due Date Payment System**: A way to collect payment if the user is late to return a book.
+- **Librarian Panel**: A dedicated panel for librarians to lend or unlend books.
+- **Admin Panel**: A panel for the library admin to add books.
+- **Secure Data Transfer**: Protected routes ensuring secure data transmission.
+- **Latest Books**: A section that showcases the latest books added to the library.
+- **Authenticated and Local Sign-in**: Ability for users to sign in with authentication, including local sign-in with options to add and change phone number, username.
+- **AI-Powered Chatbot**: An AI-based recommendation system that suggests materials based on user input powered by AI.
+- **Dashboard(Beta)**: A beta version dashboard for tracking user engagement.
 
 ---
 
