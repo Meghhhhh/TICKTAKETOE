@@ -35,10 +35,8 @@ const Bookmarks = () => {
     const fetchFavouriteResources = async () => {
       setLoading(true); // Start loading
       try {
-        const resourcesResponse = await axios.get(
-          "/users/api/v1/getFavouriteResources"
-        );
-        setFavouriteResources(resourcesResponse.data.data || []);
+        const resourcesResponse = await axios.get("/users/api/v1/getFavouriteResources");
+        setFavouriteResources(resourcesResponse?.data?.data || []);
       } catch (err) {
         setErrorFavourites(err.message);
       } finally {
