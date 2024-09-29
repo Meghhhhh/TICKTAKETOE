@@ -2,10 +2,10 @@ import React, { useRef, useState } from "react";
 import styles from "../module/addbooks.module.css";
 import { IoChevronBackCircle } from "react-icons/io5";
 import axios from "axios";
-import Loader from "./Loader";
+import Loader from "./Loader"; // Import Loader component
 
 const AddBooks = ({ setShowNewComponent }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Create a loading state
   const isbnRef = useRef("");
   const isbnRef1 = useRef("");
   const genreRef = useRef("current");
@@ -18,7 +18,7 @@ const AddBooks = ({ setShowNewComponent }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLoading(true);
+    setLoading(true); // Set loading to true when the request starts
 
     const ISBN = isbnRef.current.value;
     const genre = genreRef.current.value;
@@ -34,39 +34,40 @@ const AddBooks = ({ setShowNewComponent }) => {
       )
       .then((res) => {
         console.log(res);
-        setLoading(false);
+        setLoading(false); // Set loading to false when request finishes
       })
       .catch((error) => {
         console.error(error);
-        setLoading(false);
+        setLoading(false); // Set loading to false on error
       });
   };
+
   const handleSubmit1 = (event) => {
     event.preventDefault();
-    setLoading(true);
+    setLoading(true); // Set loading to true when the request starts
 
     const ISBN = isbnRef1.current.value;
-
     const quantity = quantityRef1.current.value;
 
     axios
       .post(
         `/books/api/v1/updateQuantity`,
-        { ISBN,  quantity },
+        { ISBN, quantity },
         {
           withCredentials: true,
         }
       )
       .then((res) => {
         console.log(res);
-        setLoading(false);
+        setLoading(false); // Set loading to false when request finishes
       })
       .catch((error) => {
         console.error(error);
-        setLoading(false);
+        setLoading(false); // Set loading to false on error
       });
   };
 
+  // If loading is true, show the Loader component
   if (loading) {
     return <Loader />;
   }
@@ -76,6 +77,7 @@ const AddBooks = ({ setShowNewComponent }) => {
       <button className={styles.backButton} onClick={handleBlankCardClick}>
         <IoChevronBackCircle />
       </button>
+      {/* Form for adding new book */}
       <form
         id="contact-form"
         className={styles.contactForm}
@@ -127,6 +129,8 @@ const AddBooks = ({ setShowNewComponent }) => {
           </button>
         </div>
       </form>
+
+      {/* Form for updating book quantity */}
       <form
         id="contact-form"
         className={styles.contactForm}

@@ -5,6 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import DropdownMenu from "./DropdownMenu";
 import axios from "axios";
+import Loader from "./Loader"; // Import Loader
 
 const AdminBooks = () => {
   const [isGridView, setIsGridView] = useState(false);
@@ -13,10 +14,12 @@ const AdminBooks = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [filterType, setFilterType] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [loading, setLoading] = useState(true); // Loader state for fetching books
 
   useEffect(() => {
     // Fetch books from the backend
     const fetchBooks = async () => {
+      setLoading(true); // Show loader while fetching books
       try {
         const response = await axios.get("/books/api/v1/getAllBooks");
         if (response.data.success) {
@@ -25,6 +28,8 @@ const AdminBooks = () => {
         }
       } catch (error) {
         console.error("Error fetching books:", error);
+      } finally {
+        setLoading(false); // Hide loader after fetching books
       }
     };
 
@@ -44,6 +49,7 @@ const AdminBooks = () => {
   };
 
   const handleSearchClick = async () => {
+    setLoading(true); // Show loader while searching
     try {
       const response = await axios.post("/books/api/v1/searchBookByTitle", {
         title: searchQuery,
@@ -56,6 +62,8 @@ const AdminBooks = () => {
       }
     } catch (error) {
       console.error("Error searching books:", error);
+    } finally {
+      setLoading(false); // Hide loader after search is complete
     }
   };
 
@@ -66,6 +74,7 @@ const AdminBooks = () => {
   };
 
   const applyFilter = async (filterType, filterValue) => {
+    setLoading(true); // Show loader while applying filter
     try {
       const response = await axios.post("/books/api/v1/filter", {
         type: filterType,
@@ -78,10 +87,13 @@ const AdminBooks = () => {
       }
     } catch (error) {
       console.error("Error applying filter:", error);
+    } finally {
+      setLoading(false); // Hide loader after filter is applied
     }
   };
 
   const handleDeleteClick = async (ISBN) => {
+    setLoading(true); // Show loader while deleting a book
     try {
       const response = await axios.delete("/books/api/v1/deleteBook", {
         data: { ISBN },
@@ -95,8 +107,14 @@ const AdminBooks = () => {
       }
     } catch (error) {
       console.error("Error deleting book:", error);
+    } finally {
+      setLoading(false); // Hide loader after book is deleted
     }
   };
+
+  if (loading) {
+    return <Loader />; // Display loader when loading
+  }
 
   return (
     <div className={style.body}>
