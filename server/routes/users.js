@@ -11,7 +11,7 @@ router.get(
   "/getUser",
   [isLoggedIn],
   catchAsync(async (req, res) => {
-    const { email, name, profilePicture, phoneNumber, isAdmin, authType, _id } =
+    const { email, name, profilePicture, phoneNumber, isAdmin, authType, _id,isLibrarian } =
       req.user.user;
     res.json({
       success: true,
@@ -25,6 +25,7 @@ router.get(
         isAdmin,
         authType,
         _id,
+        isLibrarian
       },
     });
   })

@@ -17,7 +17,15 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { name, email, profilePicture, isAdmin, authType ,_id,isLibrarian } = action.payload;
+      const {
+        name,
+        email,
+        profilePicture,
+        isAdmin,
+        authType,
+        _id,
+        isLibrarian,
+      } = action.payload;
       state.name = name;
       state.email = email;
       state.profilePicture = profilePicture;
