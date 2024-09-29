@@ -26,6 +26,7 @@ import axios from "axios";
 function App() {
   const [loading, setLoading] = useState(true);
 
+
   const dispatch = useDispatch();
 
     useEffect(() => {
@@ -101,6 +102,9 @@ function App() {
         return <Navigate to="/auth/login" />;
       }
     };
+
+    
+ 
   return (
     <>
       <Background />
@@ -111,8 +115,16 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Signup />} />
-            <Route path="/paymentfailed" element={<PaymentFailed />} />
-            <Route path="/paymentSuccess" element={<PaymentSuccess />} />
+
+            <Route
+              path="/paymentfailed"
+              element={<PaymentFailed /> }
+            />
+            <Route
+              path="/paymentSuccess"
+              element={<PaymentSuccess /> }
+            />
+                
             <Route path="/myresources" element={<Myresources />} />
             <Route path="/addresources" element={<Addresources />} />
             <Route path="/faqs" element={<FAQs />} />
@@ -121,7 +133,10 @@ function App() {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/history" element={<Mybooks />} />
             <Route path="/feedback" element={<Feedback />} />
-            <Route path="/libadmin" element={<LibRoute element={<Libadmin />}/>} />
+            <Route
+              path="/libadmin"
+              element={<LibRoute element={<Libadmin />} />}
+            />
             <Route
               path="/admin"
               element={<PrivateRoute element={<Admin />} />}
