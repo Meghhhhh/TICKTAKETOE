@@ -34,8 +34,8 @@ const Addresources = () => {
       formData.append("link", link);
     } else {
       formData.append("file", file);
-      formData.append("thumbnail", thumbnail);
     }
+    formData.append("thumbnail", thumbnail);
 
     try {
       const response = await axios.post(
