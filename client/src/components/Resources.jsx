@@ -9,10 +9,12 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState("all"); // State for managing resource type filter
+
   const itemsPerPage = 5;
   const debounceDelay = 1000;
+
   useEffect(() => {
     const fetchResources = async () => {
       try {
@@ -73,18 +75,22 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
     }, debounceDelay);
 
     return () => {
-      clearTimeout(handler); // Cleanup on unmount or searchQuery change
+      clearTimeout(handler); 
     };
   }, [searchQuery]);
 
+
+  const filteredResources = resources.filter((resource) => {
+    if (filter === "all") {
+      return true;
+    }
+    return resource.category === filter;
+  });
+
   const offset = currentPage * itemsPerPage;
-  if (resources) {
-    var currentItems = resources?.slice(offset, offset + itemsPerPage);
-    var pageCount = Math.ceil(resources?.length / itemsPerPage);
-  } else {
-     var currentItems = 0;
-    var pageCount = 0;
-  }
+  const currentItems = filteredResources.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredResources.length / itemsPerPage);
+
   return (
     <div>
       <h2
@@ -96,6 +102,19 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
       </h2>
 
       <div className={style.searchContainer}>
+        <div className={style.filterContainer}>
+          <label>Filter by category:</label>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className={style.filterSelect}
+          >
+            <option value="all">All</option>
+            <option value="pdf">PDF</option>
+            <option value="link">Link</option>
+            <option value="word">Word Document</option>
+          </select>
+        </div>
         <input
           type="text"
           value={searchQuery}
@@ -111,7 +130,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
         <p>Error: {error}</p>
       ) : (
         <div className={style.galleryContainer}>
-          {currentItems?.map((resource, index) => (
+          {currentItems.map((resource, index) => (
             <div
               key={index}
               className={style.bookContainer}

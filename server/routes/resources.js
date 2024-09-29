@@ -151,36 +151,7 @@ router.post(
   // isLoggedIn,
   upload.fields([{ name: "thumbnail" }, { name: "file" }]), // Allow multiple fields
   asyncMiddleware(async (req, res) => {
-    const categories = [
-      "text",
-      "pdf",
-      "word",
-      "image",
-      "video",
-      "other",
-      "link",
-    ];
-    // const schema = Joi.object({
-    //   title: Joi.string().required(),
-    //   category: Joi.string()
-    //     .valid(...categories)
-    //     .required(),
-    //   description: Joi.string(),
-    //   link: Joi.string().optional(),
-    //   userId: Joi.string(),
-
-    // });
-
-    // const { error } = schema.validate(req.body);
-    // if (error)
-    // return res.json({
-    //   success: false,
-    //   status: 401,
-    //   message: error.details[0].message,
-    //   data: null,
-    // });
-
-    const { title, category, description, userId, tags } = req.body;
+    const { title, category, description, userId, tags, link } = req.body;
 
     const userExists = await User.findById(userId);
     if (!userExists) {
@@ -193,15 +164,61 @@ router.post(
     }
 
     if (category === "link") {
+
+      
+      if (!link) {
+        return res.json({
+          success: false,
+          status: 400,
+          message: "Link is required for category 'link'",
+          data: null,
+        });
+      }
+
+      const thumbnail = req.files.thumbnail ? req.files.thumbnail[0] : null;
+
+      if (!thumbnail) {
+        return res.json({
+          success: false,
+          status: 400,
+          message: "No thumbnail uploaded",
+          data: null,
+        });
+      }
+
+
+      const thumbnailName = `${Date.now()}_thumbnail_${thumbnail.originalname}`;
+      const thumbnailRef = ref(storage, `resources/${thumbnailName}`);
+
+      
+      const thumbnailMetadata = {
+        contentType: thumbnail.mimetype,
+      };
+      const thumbnailUploadTask = await uploadBytesResumable(
+        thumbnailRef,
+        thumbnail.buffer,
+        thumbnailMetadata
+      );
+
+      
+      const thumbnailDownloadURL = await getDownloadURL(
+        thumbnailUploadTask.ref
+      );
+
+
       const resource = new Resources({
         title,
-        link: req.body.link,
+        link,
         category,
         description,
+        thumbnail: thumbnailDownloadURL,
+        thumbnailName,
         userId,
         tags,
       });
       await resource.save();
+
+      
       return res.json({
         success: true,
         status: 200,
@@ -527,6 +544,7 @@ router.post(
       select: "name",
     });
 
+
     // If no interactions are found, return random resources
     if (userInteractions.length === 0) {
       const randomResources = await Resources.aggregate([
@@ -577,6 +595,7 @@ router.post(
         data: recommendedResources,
       });
     }
+
 
     res.json({
       success: true,
