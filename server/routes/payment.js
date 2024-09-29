@@ -24,8 +24,8 @@ router.post("/create-checkout-session", [isLoggedIn], async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/paymentsuccess`,
-      cancel_url: `${process.env.CLIENT_URL}/paymentfailed`,
+      success_url: `${process.env.SERVER_URL}/payment/api/v1/paymentsuccess`,
+      cancel_url: `${process.env.SERVER_URL}/payment/api/v1/paymentfailed`,
     });
 
     res.json({ id: session.id });
@@ -46,11 +46,12 @@ router.get("/paymentsuccess", isLoggedIn, async (req, res) => {
     );
 
     // Send a success response after performing all operations
-    res.status(200).json({
-      success: true,
-      message: "Lending records cleared and user profile updated",
-      deletedLendingsCount: lendingsDeleted.deletedCount,
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Lending records cleared and user profile updated",
+    //   deletedLendingsCount: lendingsDeleted.deletedCount,
+    // });
+    res.redirect(`${process.env.CLIENT_URL}/paymentsuccess`);
   } catch (error) {
     console.error("Error during payment success processing:", error);
     res.status(500).json({
