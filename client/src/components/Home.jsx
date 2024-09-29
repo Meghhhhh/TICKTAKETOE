@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFavouriteResources = async () => {
       try {
-        const response = await axios.get("/users/api/v1/getFavouriteResources", {
+        const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getFavouriteResources`, {
           params: { userId }, // Send userId as a query param or include in headers
         });
         if (response.data.success) {
@@ -39,7 +39,7 @@ const Home = () => {
     try {
       if (favouriteResources.includes(resourceId)) {
         // Unfavourite the resource
-        const response = await axios.post("/users/api/v1/unfavouriteResource", {
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/unfavouriteResource`, {
           userId, // Send userId in request
           resourceId,
         });
@@ -48,7 +48,7 @@ const Home = () => {
         }
       } else {
         // Favourite the resource
-        const response = await axios.post("/users/api/v1/favouriteResource", {
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/favouriteResource`, {
           userId, // Send userId in request
           resourceId,
         });
@@ -90,3 +90,5 @@ const Home = () => {
 };
 
 export default Home;
+
+

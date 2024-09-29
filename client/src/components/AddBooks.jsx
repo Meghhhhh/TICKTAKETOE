@@ -26,7 +26,7 @@ const AddBooks = ({ setShowNewComponent }) => {
 
     axios
       .post(
-        `/books/api/v1/addBook`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/addBook`,
         { ISBN, genre, quantity },
         {
           withCredentials: true,
@@ -51,7 +51,9 @@ const AddBooks = ({ setShowNewComponent }) => {
 
     axios
       .post(
-        `/books/api/v1/updateQuantity`,
+        `${
+          import.meta.env.VITE_REACT_APP_BASE_URL
+        }/books/api/v1/updateQuantity`,
         { ISBN, quantity },
         {
           withCredentials: true,

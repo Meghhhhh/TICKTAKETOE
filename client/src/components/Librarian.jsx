@@ -16,7 +16,7 @@ const Librarian = () => {
 
   const fetchLibrarians = async () => {
     try {
-      const response = await axios.get("/users/api/v1/getLibrarians");
+      const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getLibrarians`);
       setLibrarians(response.data.data);
     } catch (error) {
       console.error("Error fetching librarians:", error);
@@ -27,7 +27,7 @@ const Librarian = () => {
 
   const deleteLibrarian = async (email) => {
     try {
-      await axios.delete("/users/api/v1/deleteLibrarian", { data: { email } });
+      await axios.delete(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/deleteLibrarian`, { data: { email } });
       setLibrarians((prevLibrarians) =>
         prevLibrarians.filter((librarian) => librarian.email !== email)
       );

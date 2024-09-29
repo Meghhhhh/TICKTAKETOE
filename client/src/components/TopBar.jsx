@@ -20,7 +20,7 @@ const TopBar = () => {
 
   useEffect(() => {
     axios
-      .get("/users/api/v1/getUser", { withCredentials: true })
+      .get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getUser`, { withCredentials: true })
       .then((response) => {
         if (response.data.status === 200) {
           setIsLoggedIn(true);

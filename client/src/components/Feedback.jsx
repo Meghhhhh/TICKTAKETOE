@@ -29,7 +29,7 @@ const Feedback = () => {
 
     axios
       .post(
-        "feedback/api/v1/postFeedback",
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}feedback/api/v1/postFeedback`,
         {
           feedback,
           bookName,
@@ -66,7 +66,7 @@ const Feedback = () => {
   const searchBookByTitle = async (title) => {
     try {
       const response = await axios.post(
-        "/books/api/v1/searchBookByTitle",
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/searchBookByTitle`,
         { title },
         { withCredentials: true }
       );

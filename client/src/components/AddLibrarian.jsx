@@ -13,9 +13,14 @@ const AddLibrarian = ({ setShowNewComponent1 }) => {
     e.preventDefault();
     setLoading(true); // Set loading to true when the request starts
     try {
-      const response = await axios.post("/users/api/v1/createLibrarian", {
-        email,
-      });
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_REACT_APP_BASE_URL
+        }/users/api/v1/createLibrarian`,
+        {
+          email,
+        }
+      );
       toast.success(response?.data?.message, {
         onClose: () => setShowNewComponent1(false),
       });

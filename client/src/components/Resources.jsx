@@ -18,7 +18,11 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await axios.post("/resource/api/v1/getResources");
+        const response = await axios.post(
+          `${
+            import.meta.env.VITE_REACT_APP_BASE_URL
+          }/resource/api/v1/getResources`
+        );
         setResources(response.data.data);
       } catch (err) {
         console.log(err);
@@ -38,7 +42,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
     const handler = setTimeout(async () => {
       if (searchQuery.trim()) {
         try {
-          const response = await axios.post("/resource/api/v1/searchResources", {
+          const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/searchResources`, {
             keyword: searchQuery,
           });
           if (response.data.success) {
@@ -54,7 +58,7 @@ const Resources = ({ favouriteResources, toggleFavourite }) => {
       } else {
         const fetchRes = async () => {
           try {
-            const response = await axios.post("/resource/api/v1/getResources");
+            const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/getResources`);
             setResources(response.data.data);
           } catch (err) {
             console.log(err);

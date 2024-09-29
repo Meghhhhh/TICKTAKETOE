@@ -21,7 +21,7 @@ const AdminBooks = () => {
     const fetchBooks = async () => {
       setLoading(true); // Show loader while fetching books
       try {
-        const response = await axios.get("/books/api/v1/getAllBooks");
+        const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/getAllBooks`);
         if (response.data.success) {
           setBooks(response.data.data);
           setFilteredItems(response.data.data);
@@ -51,7 +51,7 @@ const AdminBooks = () => {
   const handleSearchClick = async () => {
     setLoading(true); // Show loader while searching
     try {
-      const response = await axios.post("/books/api/v1/searchBookByTitle", {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/searchBookByTitle`, {
         title: searchQuery,
       });
       if (response.data.success) {
@@ -76,7 +76,7 @@ const AdminBooks = () => {
   const applyFilter = async (filterType, filterValue) => {
     setLoading(true); // Show loader while applying filter
     try {
-      const response = await axios.post("/books/api/v1/filter", {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/filter`, {
         type: filterType,
         value: filterValue,
       });
@@ -95,9 +95,12 @@ const AdminBooks = () => {
   const handleDeleteClick = async (ISBN) => {
     setLoading(true); // Show loader while deleting a book
     try {
-      const response = await axios.delete("/books/api/v1/deleteBook", {
-        data: { ISBN },
-      });
+      const response = await axios.delete(
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/deleteBook`,
+        {
+          data: { ISBN },
+        }
+      );
       if (response.data.success) {
         const newBooks = books.filter((book) => book.ISBN !== ISBN);
         setBooks(newBooks);

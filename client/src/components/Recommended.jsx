@@ -13,7 +13,9 @@ const Recommended = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get("/books/api/v1/getLatests");
+        const response = await axios.get(
+          "https://ticktechtoe.onrender.com/books/api/v1/getLatests"
+        );
         setBooks(response?.data?.data);
       } catch (err) {
         console.log(err.message);

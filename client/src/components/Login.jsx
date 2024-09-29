@@ -24,7 +24,7 @@ const Login = () => {
 
     axios
       .post(
-        "/auth/api/v1/local/login",
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/api/v1/local/login`,
         {
           email,
           password,
@@ -51,7 +51,10 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.open(`http://localhost:3000/auth/api/v1/google/register`, "_self");
+    window.open(
+      `${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/api/v1/google/register`,
+      "_self"
+    );
   };
 
   return (

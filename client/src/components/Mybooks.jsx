@@ -10,7 +10,7 @@ const Mybooks = () => {
   useEffect(() => {
     const fetchBookHistory = async () => {
       try {
-        const response = await axios.get("/users/api/v1/getHistory", {
+        const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getHistory`, {
           headers: {
             "Content-Type": "application/json",
           },

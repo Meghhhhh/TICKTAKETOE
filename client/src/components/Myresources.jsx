@@ -12,7 +12,7 @@ const Myresources = () => {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await axios.post("resource/api/v1/getMyResources" );
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}resource/api/v1/getMyResources` );
         setResources(response?.data?.data);
         setLoading(false);
       } catch (error) {
@@ -26,7 +26,7 @@ const Myresources = () => {
   const handleDelete = async (id) => {
     setDeletingResourceId(id); // Set the resource ID that is being deleted
     try {
-      const response = await axios.delete("resource/api/v1/deleteResource", {
+      const response = await axios.delete(`${import.meta.env.VITE_REACT_APP_BASE_URL}resource/api/v1/deleteResource`, {
         data: { id },
       });
       if (response.data.success) {

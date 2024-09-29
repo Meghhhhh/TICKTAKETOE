@@ -18,7 +18,7 @@ const Books = () => {
     // Fetch books from the backend
     const fetchBooks = async () => {
       try {
-        const response = await axios.get("/books/api/v1/getAllBooks");
+        const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/getAllBooks`);
         if (response.data.success) {
           setBooks(response.data.data);
           setFilteredItems(response.data.data);
@@ -33,7 +33,7 @@ const Books = () => {
     // Fetch bookmarked books
     const fetchBookmarkedBooks = async () => {
       try {
-        const response = await axios.get("/users/api/v1/getBookmarkedBooks");
+        const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getBookmarkedBooks`);
         if (response.data.success) {
           setBookmarkedBooks(response.data.data.map((book) => book._id));
         }
@@ -56,7 +56,7 @@ const Books = () => {
 
   const handleSearchClick = async () => {
     try {
-      const response = await axios.post("books/api/v1/searchBookByTitle", {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}books/api/v1/searchBookByTitle`, {
         title: searchQuery,
       });
       if (response.data.success) {
@@ -78,7 +78,7 @@ const Books = () => {
 
   const applyFilter = async (filterType, filterValue) => {
     try {
-      const response = await axios.post("books/api/v1/filter", {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}books/api/v1/filter`, {
         type: filterType,
         value: filterValue,
       });
@@ -96,7 +96,7 @@ const Books = () => {
     try {
       // If the book is already bookmarked, unbookmark it
       if (bookmarkedBooks.includes(bookId)) {
-        const response = await axios.post("/users/api/v1/unbookmarkBook", {
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/unbookmarkBook`, {
           bookId,
         });
         if (response.data.success) {
@@ -104,7 +104,7 @@ const Books = () => {
         }
       } else {
         // Bookmark the book if not already bookmarked
-        const response = await axios.post("/users/api/v1/bookmarkBook", {
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/bookmarkBook`, {
           bookId,
         });
         if (response.data.success) {

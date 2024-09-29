@@ -28,7 +28,7 @@ const Libadmin = () => {
     };
 
     axios
-      .post("/lending/api/v1/lendBook", formData, {
+      .post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/lending/api/v1/lendBook`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -62,7 +62,7 @@ const Libadmin = () => {
     };
 
     axios
-      .post("/lending/api/v1/unlendBook", formData, {
+      .post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/lending/api/v1/unlendBook`, formData, {
         headers: {
           "Content-Type": "application/json",
         },

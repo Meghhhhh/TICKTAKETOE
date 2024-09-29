@@ -35,7 +35,7 @@ const Signup = () => {
 
     axios
       .post(
-        "/auth/api/v1/local/register",
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/api/v1/local/register`,
         { email, password },
         { withCredentials: true }
       )
@@ -44,7 +44,7 @@ const Signup = () => {
         if (response.status === 200) {
           axios
             .post(
-              "/auth/api/v1/local/login",
+              `${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/api/v1/local/login`,
               {
                 email,
                 password,

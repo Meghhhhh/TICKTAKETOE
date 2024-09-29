@@ -17,11 +17,11 @@ const RecommendedResources = ({ favouriteResources, toggleFavourite }) => {
     const fetchRecommendedResources = async () => {
       try {
         const [contentResponse, collaborativeResponse] = await Promise.all([
-          axios.post("/resource/api/v1/recommendResourcesByContent", {
+          axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/recommendResourcesByContent`, {
             resourceId,
           }),
           axios.post(
-            "/resource/api/v1/recommendResourcesByCollaborativeFiltering",
+            `${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/recommendResourcesByCollaborativeFiltering`,
             {
               userId,
             }

@@ -31,7 +31,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get("/users/api/v1/getUser", { withCredentials: true })
+      .get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getUser`, { withCredentials: true })
       .then((response) => {
         const { name, email, profilePicture, authType, phoneNumber } =
           response.data.data;
@@ -45,7 +45,7 @@ const Profile = () => {
 
   const handleDelete = () => {
     axios
-      .post("/users/api/v1/deleteUser", { withCredentials: true })
+      .post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/deleteUser`, { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           toast.success("Account Deleted successfully!");
@@ -71,7 +71,7 @@ const Profile = () => {
 
       axios
         .post(
-          "/auth/api/v1/local/resetPassword",
+          `${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/api/v1/local/resetPassword`,
           {
             currentPassword: currentPass,
             newPassword: newPass,
@@ -93,7 +93,9 @@ const Profile = () => {
   const handleLogout = () => {
     axios
       .post(
-        `/auth/api/v1/${userDetails.authType}/logout`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/auth/api/v1/${
+          userDetails.authType
+        }/logout`,
         {},
         { withCredentials: true }
       )
@@ -131,7 +133,7 @@ const Profile = () => {
 
     axios
       .put(
-        "/users/api/v1/updateUser",
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/updateUser`,
         { name, phoneNumber },
         { withCredentials: true }
       )
@@ -156,7 +158,7 @@ const Profile = () => {
 
   const handleFetchOverdueFees = () => {
     axios
-      .get("/users/api/v1/calculateOverdueFees", { withCredentials: true })
+      .get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/calculateOverdueFees`, { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           console.log(response.data.data);
@@ -198,7 +200,7 @@ const Profile = () => {
     };
 
     try {
-      const response = await fetch("/payment/api/v1/create-checkout-session", {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BASE_URL}/payment/api/v1/create-checkout-session`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(body),

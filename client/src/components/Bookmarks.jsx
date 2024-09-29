@@ -17,7 +17,7 @@ const Bookmarks = () => {
       setLoading(true); // Start loading
       try {
         const booksResponse = await axios.get(
-          "/users/api/v1/getBookmarkedBooks"
+          `${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getBookmarkedBooks`
         );
         setBookmarkedBooks(booksResponse.data.data || []);
       } catch (err) {
@@ -35,7 +35,7 @@ const Bookmarks = () => {
     const fetchFavouriteResources = async () => {
       setLoading(true); // Start loading
       try {
-        const resourcesResponse = await axios.get("/users/api/v1/getFavouriteResources");
+        const resourcesResponse = await axios.get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getFavouriteResources`);
         setFavouriteResources(resourcesResponse?.data?.data || []);
       } catch (err) {
         setErrorFavourites(err.message);
@@ -52,7 +52,7 @@ const Bookmarks = () => {
     try {
       if (bookmarkedBooks.some((book) => book._id === bookId)) {
         // Unbookmark the book if it is already bookmarked
-        const response = await axios.post("/users/api/v1/unbookmarkBook", {
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/unbookmarkBook`, {
           bookId,
         });
         if (response.data.success) {
@@ -62,12 +62,14 @@ const Bookmarks = () => {
         }
       } else {
         // Bookmark the book if it is not already bookmarked
-        const response = await axios.post("/users/api/v1/bookmarkBook", {
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/bookmarkBook`, {
           bookId,
         });
         if (response.data.success) {
           const bookmarkedBook = await axios.get(
-            `/books/api/v1/getBook/${bookId}`
+            `${
+              import.meta.env.VITE_REACT_APP_BASE_URL
+            }/books/api/v1/getBook/${bookId}`
           );
           setBookmarkedBooks((prev) => [...prev, bookmarkedBook.data.data]);
         }
@@ -88,13 +90,13 @@ const Bookmarks = () => {
 
       if (isFavourited) {
         // Unfavourite the resource
-        await axios.post("/users/api/v1/unfavouriteResource", { resourceId });
+        await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/unfavouriteResource`, { resourceId });
         setFavouriteResources((prev) =>
           prev.filter((resource) => resource._id !== resourceId)
         );
       } else {
         // Favourite the resource
-        await axios.post("/users/api/v1/favouriteResource", { resourceId });
+        await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/favouriteResource`, { resourceId });
       }
     } catch (err) {
       setErrorFavourites(err.message);

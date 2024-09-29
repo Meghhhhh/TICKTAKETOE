@@ -13,7 +13,10 @@ const AddAdmin = ({ setShowNewComponent2 }) => {
     e.preventDefault();
     setLoading(true); // Set loading to true when request starts
     try {
-      const response = await axios.post("/users/api/v1/createAdmin", { email });
+      const response = await axios.post(
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/createAdmin`,
+        { email }
+      );
       toast.success(response?.data?.message, {
         onClose: () => setShowNewComponent2(false),
       });

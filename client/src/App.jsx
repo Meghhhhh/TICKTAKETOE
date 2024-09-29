@@ -1,5 +1,10 @@
-import React,{useEffect, useState} from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TopBar from "./components/TopBar";
@@ -26,85 +31,75 @@ import axios from "axios";
 function App() {
   const [loading, setLoading] = useState(true);
 
-
   const dispatch = useDispatch();
 
-    useEffect(() => {
-      axios
-        .get(`/users/api/v1/getUser`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          const { name, email, profilePicture, isAdmin, _id, isLibrarian } =
-            response?.data?.data;
-          dispatch(
-            setUser({ name, email, profilePicture, isAdmin, _id, isLibrarian })
-          );
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          console.error("Failed to fetch user details");
-          setLoading(false);
-        });
-    }, [dispatch]);
+  useEffect(() => {
+    axios
+      .get(`/users/api/v1/getUser`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        const { name, email, profilePicture, isAdmin, _id, isLibrarian } =
+          response?.data?.data;
+        dispatch(
+          setUser({ name, email, profilePicture, isAdmin, _id, isLibrarian })
+        );
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        console.error("Failed to fetch user details");
+        setLoading(false);
+      });
+  }, [dispatch]);
 
-   const LibRoute = ({ element }) => {
-     const { isLoggedIn, isLibrarian } = useSelector((state) => state.user);
+  const LibRoute = ({ element }) => {
+    const { isLoggedIn, isLibrarian } = useSelector((state) => state.user);
 
-
-
-     if (loading) {
-       return <h2>loading</h2>;
-     }
-     if (isLoggedIn) {
-       if (isLibrarian) {
-         return element;
-       } else if (!isLibrarian) {
-         return <Navigate to="/" />;
-       }
-       // return element;
-     } else {
-       return <Navigate to="/auth/login" />;
-     }
-   };
-     const DashRoute = ({ element }) => {
-       const { isLoggedIn } = useSelector((state) => state.user);
-
-       if (loading) {
-         return <h2>loading</h2>;
-       }
-       if (isLoggedIn) {
-
-           return element;
-      
-
-       } else {
-         return <Navigate to="/auth/login" />;
-       }
-     };
-    const PrivateRoute = ({ element }) => {
-      const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
-
-      if (loading) {
-        return;
+    if (loading) {
+      return <h2>loading</h2>;
+    }
+    if (isLoggedIn) {
+      if (isLibrarian) {
+        return element;
+      } else if (!isLibrarian) {
+        return <Navigate to="/" />;
       }
-      if (isLoggedIn) {
-        if (isAdmin) {
+      // return element;
+    } else {
+      return <Navigate to="/auth/login" />;
+    }
+  };
+  const DashRoute = ({ element }) => {
+    const { isLoggedIn } = useSelector((state) => state.user);
 
-          return element;
-        } else if (!isAdmin) {
+    if (loading) {
+      return <h2>loading</h2>;
+    }
+    if (isLoggedIn) {
+      return element;
+    } else {
+      return <Navigate to="/auth/login" />;
+    }
+  };
+  const PrivateRoute = ({ element }) => {
+    const { isLoggedIn, isAdmin } = useSelector((state) => state.user);
 
-          return <Navigate to="/" />;
-        }
-        // return element;
-      } else {
-        return <Navigate to="/auth/login" />;
+    if (loading) {
+      return;
+    }
+    if (isLoggedIn) {
+      if (isAdmin) {
+        return element;
+      } else if (!isAdmin) {
+        return <Navigate to="/" />;
       }
-    };
+      // return element;
+    } else {
+      return <Navigate to="/auth/login" />;
+    }
+  };
 
-    
- 
   return (
     <>
       <Background />
@@ -116,15 +111,9 @@ function App() {
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Signup />} />
 
-            <Route
-              path="/paymentfailed"
-              element={<PaymentFailed /> }
-            />
-            <Route
-              path="/paymentSuccess"
-              element={<PaymentSuccess /> }
-            />
-                
+            <Route path="/paymentfailed" element={<PaymentFailed />} />
+            <Route path="/paymentSuccess" element={<PaymentSuccess />} />
+
             <Route path="/myresources" element={<Myresources />} />
             <Route path="/addresources" element={<Addresources />} />
             <Route path="/faqs" element={<FAQs />} />
