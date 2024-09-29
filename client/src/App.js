@@ -1,5 +1,10 @@
-import React,{useEffect, useState} from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TopBar from "./components/TopBar";
@@ -29,16 +34,15 @@ function App() {
 
   const dispatch = useDispatch();
 
-    useEffect(() => {
-      axios
-        .get(`/users/api/v1/getUser`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-
-
+  useEffect(() => {
+    axios
+      .get(`/users/api/v1/getUser`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        if (response) {
           const { name, email, profilePicture, isAdmin, _id, isLibrarian } =
-            response.data.data;
+            response?.data?.data;
           dispatch(
             setUser({ name, email, profilePicture, isAdmin, _id, isLibrarian })
           );
@@ -103,7 +107,11 @@ function App() {
       } else {
         return <Navigate to="/auth/login" />;
       }
-    };
+      // return element;
+    } else {
+      return <Navigate to="/auth/login" />;
+    }
+  };
   return (
     <>
       <Background />

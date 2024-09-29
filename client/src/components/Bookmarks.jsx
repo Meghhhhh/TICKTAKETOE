@@ -32,7 +32,7 @@ const Bookmarks = () => {
     const fetchFavouriteResources = async () => {
       try {
         const resourcesResponse = await axios.get("/users/api/v1/getFavouriteResources");
-        setFavouriteResources(resourcesResponse.data.data || []);
+        setFavouriteResources(resourcesResponse?.data?.data || []);
       } catch (err) {
         setErrorFavourites(err.message);
       } finally {
