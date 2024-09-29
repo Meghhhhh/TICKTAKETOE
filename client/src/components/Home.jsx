@@ -4,6 +4,7 @@ import style from "../module/home.module.css";
 import image from "../assets/logo-pink.png";
 import Resources from "./Resources";
 import RecommendedResources from "./RecommendedResources";
+import Recommended from "./Recommended";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
 
@@ -82,6 +83,7 @@ const Home = () => {
         favouriteResources={favouriteResources}
         toggleFavourite={toggleFavourite}
       />
+      <Recommended/>
       <Footer />
     </div>
   );

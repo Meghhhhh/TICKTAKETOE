@@ -1,8 +1,9 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import style from "../module/books.module.css";
 import { IoBookmarkOutline, IoBookmark } from "react-icons/io5";
 import DropdownMenu from "./DropdownMenu";
 import axios from "axios";
+import Loader from "./Loader"
 
 const Books = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -11,6 +12,7 @@ const Books = () => {
   const [filterType, setFilterType] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     // Fetch books from the backend
@@ -23,6 +25,8 @@ const Books = () => {
         }
       } catch (error) {
         console.error("Error fetching books:", error);
+      } finally {
+        setLoading(false); // Stop loading once books are fetched
       }
     };
 
@@ -133,8 +137,9 @@ const Books = () => {
       <div className={style.sec3}>
         <h2 className={style.header}>All arrivals</h2>
 
-        {/* Conditional rendering for no books available */}
-        {filteredItems.length === 0 ? (
+        {loading ? (
+          <Loader/> // Display loader while data is being fetched
+        ) : filteredItems.length === 0 ? (
           <p className={style.noResourcesMessage}>
             No books found matching your search or filter criteria.
           </p>

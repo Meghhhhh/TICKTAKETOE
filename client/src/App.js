@@ -4,7 +4,6 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import TopBar from "./components/TopBar";
 import Home from "./components/Home";
-import Payment from "./components/Payment";
 import Background from "./components/Background";
 import FAQs from "./components/FAQs";
 import About from "./components/AboutUs";
@@ -112,7 +111,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/auth/login" element={<Login />} />
             <Route path="/auth/register" element={<Signup />} />
-            <Route path="/payment" element={<Payment />} />
             <Route path="/paymentfailed" element={<PaymentFailed />} />
             <Route path="/paymentSuccess" element={<PaymentSuccess />} />
             <Route path="/myresources" element={<Myresources />} />
