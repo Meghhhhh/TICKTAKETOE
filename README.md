@@ -54,7 +54,7 @@ Our platform provides:
 
 1. **Navigate to the backend directory**:
    ```bash
-   cd backend
+   cd server
    ```
 2. **Install the necessary dependencies**:
    ```bash
@@ -72,7 +72,7 @@ Our platform provides:
 
 1. **Navigate to the frontend directory**:
    ```bash
-   cd frontend
+   cd client
    ```
 2. **Install the necessary dependencies**:
    ```bash
@@ -100,15 +100,9 @@ Our platform provides:
 - Recommendation algorithm development
 - Customizable user profiles
 - Payments and dashboard features
-
----
-
-## ⏭️ Next Steps
-
-1. Finalize and test the recommendation system
-2. Implement advanced search and filter options
-3. Conduct testing and bug fixing
-4. Prepare for beta release
+- Implement advanced search and filter options
+- Tested the recommendation system
+- Conduct testing and bug fixing
 
 ---
 
