@@ -9,10 +9,20 @@ const Lendings = require("../models/lending.js");
 const moment = require("moment");
 router.get(
   "/getUser",
-  [isLoggedIn],
+  // [isLoggedIn],
   catchAsync(async (req, res) => {
-    const { email, name, profilePicture, phoneNumber, isAdmin, authType, _id,isLibrarian } =
-      req.user.user;
+    const {
+      email,
+      name,
+      profilePicture,
+      phoneNumber,
+      isAdmin,
+      authType,
+      _id,
+      isLibrarian,
+    } = req.user.user;
+    console.log(req.user.user);
+
     res.json({
       success: true,
       status: 200,
@@ -25,7 +35,7 @@ router.get(
         isAdmin,
         authType,
         _id,
-        isLibrarian
+        isLibrarian,
       },
     });
   })
@@ -508,7 +518,6 @@ router.get(
 
     // Total fee including fixed charge
     const overallFee = totalOverdueFee + FIXED_CHARGE;
-  
 
     res.json({
       success: true,
