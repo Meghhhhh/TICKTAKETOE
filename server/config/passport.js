@@ -15,7 +15,7 @@ passport.use(
         if (!passMatch)
           return done(null, false, { message: "Incorrect password" });
 
-        return done(null, { user });
+        return done(null,  user );
       } catch (error) {
         return done(error);
       }
@@ -32,7 +32,7 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const user = await User.findOne({ email: profile.emails[0].value });
+        const user = await User.findOne({ authId: profile.id });
 
         if (user) {
           return done(null, { user, accessToken });
