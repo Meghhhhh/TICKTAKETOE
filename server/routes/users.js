@@ -9,7 +9,7 @@ const Lendings = require("../models/lending.js");
 const moment = require("moment");
 router.get(
   "/getUser",
-  // [isLoggedIn],
+  isLoggedIn,
   catchAsync(async (req, res) => {
     const {
       email,
