@@ -37,17 +37,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: false,
+//     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+//     cookie: { secure: process.env.NODE_ENV !== "development",
+//       sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",maxAge: 1000 * 60 * 60 * 24 * 7 }, // 1 week
+//   }
+//   )
+// );
+
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: { secure: process.env.NODE_ENV !== "development",
-      sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",maxAge: 1000 * 60 * 60 * 24 * 7 }, // 1 week
-  }
-  )
-);
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: true,
+      saveUninitialized: true,
+      store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+      cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }, // 1 week
+    }
+    )
+  );
 app.use(passport.initialize());
 app.use(passport.session());
 

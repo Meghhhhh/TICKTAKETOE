@@ -15,7 +15,7 @@ passport.use(
         if (!passMatch)
           return done(null, false, { message: "Incorrect password" });
 
-        return done(null, {user});
+        return done(null, { user });
       } catch (error) {
         return done(error);
       }
@@ -28,24 +28,24 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/api/v1/google/register/callback",
+      callbackURL: `${process.env.SERVER_URL}/auth/api/v1/google/register/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
         const user = await User.findOne({ email: profile.emails[0].value });
 
         if (user) {
-          return done(null, {user, accessToken});
+          return done(null, { user, accessToken });
         } else {
           const user = new User({
             authId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
             profilePicture: profile.photos[0].value,
-            authType: "google"
+            authType: "google",
           });
           await user.save();
-          return done(null, {user,accessToken});
+          return done(null, { user, accessToken });
         }
       } catch (error) {
         return done(error);
