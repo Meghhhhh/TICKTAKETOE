@@ -532,7 +532,7 @@ router.post(
 // Collaborative Filtering Recommendation
 router.post(
   "/recommendResourcesByCollaborativeFiltering",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const userId = req.user._id;
 
