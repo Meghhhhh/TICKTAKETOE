@@ -13,10 +13,10 @@ router.get(
   passport.authenticate("google", {
     session: true,
     // successRedirect: `${process.env.CLIENT_URL}/`,
-    failureRedirect: `${process.env.CLIENT_URL}/auth/login`,
+    failureRedirect: `${process.env.CLIENT_URL}/auth/login`
   }),
   (req, res) => {
-    // console.log(req.user);
+    console.log(req.user);
     // const { email, name, profilePicture, _id, isAdmin, authId } = req.user.user;
     if (req.user.user) {
       res.redirect(`${process.env.CLIENT_URL}`);
