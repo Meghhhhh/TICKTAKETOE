@@ -12,19 +12,22 @@ router.get(
   "/register/callback",
   passport.authenticate("google", {
     session: true,
-    successRedirect: `${process.env.CLIENT_URL}/`,
-    failureRedirect: "/register",
+    // successRedirect: `${process.env.CLIENT_URL}/`,
+    failureRedirect: `${process.env.CLIENT_URL}/auth/login`,
   }),
   (req, res) => {
-    console.log(req.user);
-    const { email, name, profilePicture, _id, isAdmin, authId } = req.user.user;
+    // console.log(req.user);
+    // const { email, name, profilePicture, _id, isAdmin, authId } = req.user.user;
     if (req.user.user) {
-      return res.json({
-        success: true,
-        status: 200,
-        message: "User registered successfully",
-        data: { _id, email, profilePicture, name, isAdmin, authId },
-      });
+      res.redirect(`${process.env.CLIENT_URL}`);
+      // return res.json({
+      //   success: true,
+      //   status: 200,
+      //   message: "User registered successfully",
+      //   data: { _id, email, profilePicture, name, isAdmin, authId },
+      // });
+    }else{
+      res.redirect(`${process.env.CLIENT_URL}/auth/login`);
     }
   }
 );
