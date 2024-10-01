@@ -8,7 +8,7 @@ const axios = require("axios");
 
 router.get(
   "/getAllBooks",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, resp) => {
     const books = await Book.find();
     resp.json({
@@ -22,7 +22,7 @@ router.get(
 
 router.get(
   "/getBook",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, resp) => {
     const book = await Book.findById(req.body.id);
     if (!book)
@@ -44,7 +44,7 @@ router.get(
 
 router.post(
   "/addBook",
-  [isLoggedIn, isAdmin],
+  isAdmin,
   catchAsync(async (req, res) => {
     const { ISBN, quantity, genre } = req.body;
     axios
@@ -76,7 +76,7 @@ router.post(
 
 router.post(
   "/updateQuantity",
-  [isLoggedIn, isAdmin],
+  isAdmin,
   catchAsync(async (req, resp) => {    
     const { quantity, ISBN } = req.body;
     const book = await Book.findOne({ ISBN });
@@ -101,7 +101,7 @@ router.post(
 
 router.post(
   "/searchBookByTitle",
-  [isLoggedIn],
+  isLoggedIn,
   catchAsync(async (req, resp) => {
     const books = await Book.find({
       title: { $regex: req.body.title, $options: "i" },
@@ -125,7 +125,7 @@ router.post(
 
 router.delete(
   "/deleteBook",
-  [isLoggedIn, isAdmin],
+   isAdmin,
   catchAsync(async (req, resp) => {
     const book = await Book.findOneAndDelete(req.body.ISBN);
     if (!book)
@@ -147,7 +147,7 @@ router.delete(
 
 router.post(
   "/filter",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const { type, value } = req.body;
     if (type === "authors") {

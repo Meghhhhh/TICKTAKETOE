@@ -434,7 +434,7 @@ router.delete(
 
 router.post(
   "/rateResource",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const { resourceId, rating } = req.body;
     const userId = req.user._id;
