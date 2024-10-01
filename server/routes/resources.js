@@ -152,7 +152,7 @@ router.post(
   upload.fields([{ name: "thumbnail" }, { name: "file" }]), // Allow multiple fields
   asyncMiddleware(async (req, res) => {
     const { title, category, description, userId, tags, link } = req.body;
-
+    userId = req.user.user._id;
     const userExists = await User.findById(userId);
     if (!userExists) {
       return res.json({
@@ -164,8 +164,6 @@ router.post(
     }
 
     if (category === "link") {
-
-      
       if (!link) {
         return res.json({
           success: false,
@@ -186,11 +184,9 @@ router.post(
         });
       }
 
-
       const thumbnailName = `${Date.now()}_thumbnail_${thumbnail.originalname}`;
       const thumbnailRef = ref(storage, `resources/${thumbnailName}`);
 
-      
       const thumbnailMetadata = {
         contentType: thumbnail.mimetype,
       };
@@ -200,11 +196,9 @@ router.post(
         thumbnailMetadata
       );
 
-      
       const thumbnailDownloadURL = await getDownloadURL(
         thumbnailUploadTask.ref
       );
-
 
       const resource = new Resources({
         title,
@@ -218,7 +212,6 @@ router.post(
       });
       await resource.save();
 
-      
       return res.json({
         success: true,
         status: 200,
@@ -544,7 +537,6 @@ router.post(
       select: "name",
     });
 
-
     // If no interactions are found, return random resources
     if (userInteractions.length === 0) {
       const randomResources = await Resources.aggregate([
@@ -595,7 +587,6 @@ router.post(
         data: recommendedResources,
       });
     }
-
 
     res.json({
       success: true,
