@@ -12,7 +12,9 @@ const Myresources = () => {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/getMyResources` );
+        const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/getMyResources` ,{
+          withCredentials: true,
+        });
         setResources(response?.data?.data);
         setLoading(false);
       } catch (error) {
