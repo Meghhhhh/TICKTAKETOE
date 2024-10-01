@@ -4,8 +4,8 @@ const stripe = require("stripe")(process.env.STRIPE_CLIENT_SECRET);
 const isLoggedIn = require("../middleware/isLoggedIn.js");
 const User = require("../models/user.js");
 const Lend = require("../models/lending.js");
-
-router.post("/create-checkout-session", [isLoggedIn], async (req, res) => {
+router.use(isLoggedIn);
+router.post("/create-checkout-session", async (req, res) => {
   try {
     const { products } = req.body;
     const lineItems = products.map((product) => ({
@@ -34,7 +34,7 @@ router.post("/create-checkout-session", [isLoggedIn], async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-router.get("/paymentsuccess", isLoggedIn, async (req, res) => {
+router.get("/paymentsuccess",  async (req, res) => {
   try {
     const userId = req.user.user._id; // Get the user ID from the session
 

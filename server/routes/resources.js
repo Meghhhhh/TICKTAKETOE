@@ -73,25 +73,29 @@ router.post(
 router.post(
   "/getMyResources",
   catchAsync(async (req, res) => {
-    const userId = req.user.user._id;
+    try {
+      const userId = req.user.user._id;
 
-    if (!userId) {
+      if (!userId) {
+        return res.json({
+          success: false,
+          status: 400,
+          message: "Login first",
+          data: null,
+        });
+      }
+      const resources = await Resources.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate("userId");
       return res.json({
-        success: false,
-        status: 400,
-        message: "Login first",
-        data: null,
+        success: true,
+        status: 200,
+        message: "Resources retrieved successfully",
+        data: resources,
       });
+    } catch (error) {
+      console.log(error);
     }
-    const resources = await Resources.find({ userId })
-      .sort({ createdAt: -1 })
-      .populate("userId");
-    return res.json({
-      success: true,
-      status: 200,
-      message: "Resources retrieved successfully",
-      data: resources,
-    });
   })
 );
 
