@@ -35,7 +35,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(`/users/api/v1/getUser`, {
+      .get(`${import.meta.env.VITE_REACT_APP_BASE_URL}/users/api/v1/getUser`, {
         withCredentials: true,
       })
       .then((response) => {
