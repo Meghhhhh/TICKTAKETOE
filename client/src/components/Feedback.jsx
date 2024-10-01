@@ -29,7 +29,7 @@ const Feedback = () => {
 
     axios
       .post(
-        `${import.meta.env.VITE_REACT_APP_BASE_URL}feedback/api/v1/postFeedback`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/feedback/api/v1/postFeedback`,
         {
           feedback,
           bookName,

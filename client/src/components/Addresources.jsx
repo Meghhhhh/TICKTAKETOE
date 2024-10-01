@@ -39,9 +39,7 @@ const Addresources = () => {
 
     try {
       const response = await axios.post(
-        `${
-          import.meta.env.VITE_REACT_APP_BASE_URL
-        }/resource/api/v1/postResource`,
+        `${import.meta.env.VITE_REACT_APP_BASE_URL}/resource/api/v1/postResource`,
         formData,
         {
           headers: {

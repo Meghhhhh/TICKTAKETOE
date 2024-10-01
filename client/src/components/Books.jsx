@@ -56,7 +56,7 @@ const Books = () => {
 
   const handleSearchClick = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}books/api/v1/searchBookByTitle`, {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/searchBookByTitle`, {
         title: searchQuery,
       });
       if (response.data.success) {
@@ -78,7 +78,7 @@ const Books = () => {
 
   const applyFilter = async (filterType, filterValue) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}books/api/v1/filter`, {
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_BASE_URL}/books/api/v1/filter`, {
         type: filterType,
         value: filterValue,
       });
