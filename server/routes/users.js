@@ -7,9 +7,10 @@ const isAdmin = require("../middleware/isAdmin.js");
 const Book = require("../models/books.js");
 const Lendings = require("../models/lending.js");
 const moment = require("moment");
+router.use(isLoggedIn);
 router.get(
   "/getUser",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const {
       email,
@@ -43,7 +44,7 @@ router.get(
 
 router.post(
   "/deleteUser",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const user = await User.findById(req.user.user._id);
     if (!user) {
@@ -101,7 +102,7 @@ router.post(
 
 router.put(
   "/updateUser",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const { name, phoneNumber } = req.body;
     const user = await User.findByIdAndUpdate(
@@ -125,7 +126,7 @@ router.put(
 
 router.post(
   "/createAdmin",
-  [isLoggedIn, isAdmin],
+  isAdmin,
   catchAsync(async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
@@ -221,7 +222,7 @@ router.post(
 
 router.post(
   "/createLibrarian",
-  [isLoggedIn, isAdmin],
+  isAdmin,
   catchAsync(async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
@@ -253,7 +254,7 @@ router.post(
 
 router.delete(
   "/deleteLibrarian",
-  [isLoggedIn, isAdmin],
+  isAdmin,
   catchAsync(async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
@@ -285,7 +286,7 @@ router.delete(
 
 router.get(
   "/getLibrarians",
-  [isLoggedIn, isAdmin],
+  isAdmin,
   catchAsync(async (req, res) => {
     const librarians = await User.find({ isLibrarian: true });
     if (librarians.length === 0) {
@@ -305,7 +306,7 @@ router.get(
   })
 );
 
-router.get("/getHistory", isLoggedIn, async (req, res) => {
+router.get("/getHistory", async (req, res) => {
   try {
     const user = await User.findById(req.user.user._id);
     if (!user)
@@ -345,7 +346,7 @@ router.get("/getHistory", isLoggedIn, async (req, res) => {
 
 router.post(
   "/bookmarkBook",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const { bookId } = req.body; // Take bookId from req.body
     const user = await User.findById(req.user.user._id);
@@ -369,7 +370,7 @@ router.post(
 );
 router.post(
   "/unbookmarkBook",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     const { bookId } = req.body; // Take bookId from req.body
     const user = await User.findById(req.user.user._id);
@@ -395,7 +396,7 @@ router.post(
 );
 router.get(
   "/getBookmarkedBooks",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     try {
       const user = await User.findById(req.user.user._id).populate(
@@ -424,7 +425,7 @@ router.get(
 
 router.get(
   "/getFavouriteResources",
-  isLoggedIn,
+  // isLoggedIn,
   catchAsync(async (req, res) => {
     try {
       const user = await User.findById(req.user.user._id).populate(
@@ -456,7 +457,7 @@ router.get(
   })
 );
 
-router.get("/getBookmarkedBooks", isLoggedIn, async (req, res) => {
+router.get("/getBookmarkedBooks", async (req, res) => {
   const user = await User.findById(req.user.user._id).populate(
     "bookmarkedBooks"
   );
@@ -466,7 +467,7 @@ router.get("/getBookmarkedBooks", isLoggedIn, async (req, res) => {
   });
 });
 
-router.get("/getFavouriteResources", isLoggedIn, async (req, res) => {
+router.get("/getFavouriteResources", async (req, res) => {
   const user = await User.findById(req.user.user._id).populate(
     "favouriteResources"
   );
