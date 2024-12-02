@@ -32,6 +32,7 @@ app.use(
     origin: [
       "https://tictechtoe.onrender.com",
       "http://tictechtoe.onrender.com",
+      "http://localhost:5173/"
     ], // Allow all origins
     methods: "GET,POST,PUT,DELETE",
     credentials: true, // Allow cookies to be sent from the
